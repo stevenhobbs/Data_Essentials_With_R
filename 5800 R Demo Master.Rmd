@@ -1,0 +1,762 @@
+---
+title: "R Studio Demo"
+author: "Steven Hobbs"
+date: "Spring 2022"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
+  html_notebook: default
+editor_options:
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+# R Demo Part 1 - Markdown Basics
+
+------------------------------------------------------------------------
+
+Markdown files are primarily used to author documents for the web. The files are written with a "What you see is what you mean" editor, meaning that formatting options like bold, italics and underline are specified with text commands that are mixed in with the regular text. When the document is "knitted", the formatting commands are executed and the commands themselves are hidden from view. The knitted document takes the form of html, pdf or MS Word and is designed to be more readable and aesthetically pleasing than the Markdown document itself.
+
+R Markdown is one of many variations (more like a dialect) on the Markdown language. R Markdown files have three main parts:\
+
+**1)** A YAML header at the top of the file and located between two sets of three dashes.\
+**2)** Text written in R Markdown "language".\
+**3)** Code chunks for analyzing data.
+
+The YAML header has metadata that determines how the Markdown document will be rendered or "knitted" into a polished html page (or other document). Scroll to the top of this .Rmd file to see the YAML header with it's characteristic "key:value" organization.
+
+The R Markdown text typically explains the analysis, but can be anything the user wishes. Many R textbooks are written entirely in R Markdown files and everything that isn't output or code was written in R Markdown.
+
+## Code chunks
+
+Code chunks are where the R language is used to analyze data. This is where the business of statistics happens! New R Markdown files come pre-formatted with several code chunks that help demonstrate the functionality of an R Markdown wile.
+
+## The setup code chunk
+
+The first code chunk is the r setup code chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The "setup" statement inside curly brackets relates to options that we will not utilize in this course. Everything else about this code chunk influences the appearance of our document after it is "knitted", meaning after it is converted into something more viewer friendly, such as MS Word document, PDF or an html file. Unfortunately, this first code chunk is somewhat tedious to explain, but here it goes...
+
+Like all code chunks, we begin and end with three back tick marks. These back ticks essentially tell RStudio to stop reading R Markdown text and start text written in another language that is specified inside the curly brackets.
+
+The "include=FALSE" statement means that the code inside this particular code chunk will not appear in our knitted document.
+
+The single command in the middle of the code chunk will establish a default behavior for all code chunks that follow, which is to show the code written inside chunks in the knitted document. The command uses the double colon operator, "::", to reach into a package called knitr and grab a command called "opts_chunk". Packages like knitr provide commands that extend the functionality of R. These packages are created and then donated by R users all over the world and are largely why R has become such a powerful language.
+
+The knitr package ("knit r") provides commands that help customize the appearance of a knitted document. In this case, we use the opts_chunk command from knitr to set the default echo parameter to TRUE. This means that the code we write inside of chunks will also appear in our knitted document. However, the "include = FALSE" command inside the curly brackets overrides the default for this particular code chunk, meaning we will not see this particular code chunk echoed in the knitted document.
+
+We can (and often do) change the echo argument to "FALSE", such as when we want our reader to primarily see the tables, graphs and other types of output that we create and ignore the tedious code.
+
+The knitr package (like all packages) has many other commands as well. However, sometimes the commands inside of packages have conflicts with base R commands or other packages. The approach above using :: avoids potential conflicts by implementing just the one command (opts_chunk) without actually installing the knitr package.
+
+As it turns out the knitr package has many useful commands and few (if any) conflicts. As such, I recommend changing the code to load the knitr package and then use the opts_chunk command on a separate line. Let's eliminate "include = FALSE" through, just so that we see this code chunk in the knitted document:
+
+```{r}
+library(knitr) # The library command is used to load individual packages.
+opts_chunk$set(echo = TRUE)
+```
+
+### Loading multiple packages
+
+If you know in advance that you will use many packages in your analysis, you can add multiply library commands to this code chunk.
+
+```{r}
+library(knitr)
+opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(magrittr)
+```
+
+Note that when a package is first loaded, R will display messages indicating if the load was successful, if conflicts exist and if other commands are masked by commands in the new package.
+
+### Loading multiple packages (better) & hiding messages
+
+Because writing multiple library commands is a bit tedious, I often modify the setup code chunk even further to use p_load from the pacman package to simultaneously load multiple packages. Including "message=FALSE" and "warnings = FALSE" in the opts_chunk\$set command will hide messages in the knitted document as shown below for the kableExtra package.
+
+```{r}
+opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
+pacman::p_load(knitr, tidyverse, magrittr, kableExtra)
+```
+
+### Finishing Setup
+
+In every new Markdown file, delete everything AFTER the setup code chunk. You will replace these "demo" code chunks with chunks that are specific to your analysis.
+
+## Markdown formatting
+
+You can write *mostly* plan text in an R Markdown document. However, there are some basic ways to format text as you go for a more polished appearance. The more polished appearance is created when the Markdown file is rendered or "knitted". For example, you can use asterisks to create bold or italic font in the knitted document as shown below:
+
+*italics*\
+**bold**\
+**bold again**
+
+Note that you will not see the formatting applied until the the document is knitted, or unless you are using the visual editor (available under the settings pull down menu). Markdown has a few quirky formatting features. Leaving a blank line on your Markdown document will also leave a blank line in the knitted document. However, without that blank line, text on sequential lines will run together, unless two spaces or a backslash are left at the end of a line. The *italics* shown above has those spaces and the **bold** has the backslash. The three lines of bold text below have neither spaces nor a backslash. Compare their polished appearance after you've knitted the document:
+
+**this text will run together** **with this text on one line** **in the knitted document**
+
+## Headers can also be created with hashtags. One hashtag creates the largest header (like for "R Demo Part 1 - Markdown Basics").
+
+## Adding more hashtags create smaller headers
+
+###### 6 hashtags create the smallest header. So small... am I even worthy to be called a header?
+
+The space after the hashtag is critical! If you omit the space, the text will not be formatted as a header.
+
+Hashtags have another useful function. Notice the triangle next to each hashtag in the .Rmd file? Click on those triangles to see what they do. Go on, I dare you.
+
+## Use headers to organize code!
+
+Hopefully you observed that hashtags also create nested collapsible sections of your code. The space after each hashtag is also critical for this function. Think of a .Rmd file as an instruction manual or technical text book with big chapters indicated by a single hashtag, sub chapters by two hashtags, paragraphs by three hashtags, etc.
+
+## Let's write some code!
+
+## Writing code inline with text
+
+R code *can* be mixed in with text using back ticks as demonstrated below. The code will be placed by the output in the knitted document. To see the output before knitting, place the cursor inside the tick marks below and press "command + enter".
+
+Two plus two = `r 2+2`
+
+## Writing code inside code chunks (mostly do this)
+
+VASTLY more useful is to place many lines of code inside of those chunks that begin and end with 3 tick marks.
+
+Execute the code chunk below by any of three ways:\
+1) With the cursor inside the chunk hit "shift + command/control + return/enter"\
+2) Click the green triangle at far right\
+3) Use the Run pull down menu and choose an option
+
+```{r}
+print("Hello World")
+x <-  -10:10
+y <-  x^2
+df <- data.frame(x, y) 
+```
+
+Any visible output will appear below the chunk and in the console window. Also check the Environment panel (upper right) for objects that were created by use of the assignment operator, which is a less than sign followed by a dash.
+
+New code chunks can be created with "command/control + option/alt + i" or using the insert menu.
+
+```{r}
+# hashtags inside of code chunks create comments that are not "executed".
+# This is a boring graph using base R
+plot(x = df$x, y = df$y)
+```
+
+Inside an r chunk, individual lines of code can be executed using the short cut keys "command/control + return/enter". The cursor can be anywhere on the target line and each execution advances the cursor to the next line. Execute individual commands in the code chunk below (hidden from html file) using shortcut keys and without moving the cursor between executions. Pause after each execution to consider what each command accomplished.
+
+```{r, include = FALSE}
+# Explore the mtcars dataset that comes with R
+data(mtcars) 
+head(mtcars) 
+str(mtcars) 
+names(mtcars) 
+rownames(mtcars) 
+
+# Subset & Extract with base r
+mtcars["Datsun 710", ] 
+mtcars["Datsun 710", "hp"]
+mtcars[3, 4]
+
+# Descriptive Statistics with base r
+mean(mtcars$hp)
+summary(mtcars$hp) 
+
+# Using tidyverse commands, "select" and pipe operator "%>%". The pipe operator takes whatever is to the left of %>% and passes that into the first argument of a command on the right of %>%. The two lines below function identically, but the %>% helps readibility. 
+summary(select(mtcars, hp)) 
+mtcars %>% 
+    select(hp) %>% 
+    summary
+```
+
+## Writing code in the console window
+
+Single lines of code can be written in the console window, but are not saved and can't be edited after they have been executed. The console window is best for experimenting with short lines of code, accessing help files, installing packages, and other tasks that do not need to be included in a master code document.
+
+## Videos, Tutorials, Cheatsheets & More Help
+
+1)  [Installation Tutorials](https://tutorials.shinyapps.io/00-setup/) --\> Install R, RStudio and tidyverse on your computer.
+2)  [R Markdown Vimeo](https://vimeo.com/178485416) --\> Short video on what R Markdown is and does.
+3)  [R Markdown Tutorial](https://rmarkdown.rstudio.com/lesson-1.html) --\> A more detailed guide on R Markdown.
+4)  [R language tutorials](https://rstudio.cloud/learn/primers) --\> R programming tutorials hosted on RStudio Cloud. I recommend "The Basics", "Work with Data", "Visualize Data"
+5)  "[Cheatsheets](https://rstudio.cloud/learn/cheat-sheets)" --\> 1 - 2 pages of densely packed introductory and higher level info. Don't try to absorb everything! They are helpful though.\
+6)  Access help documentation on individual commands by typing a question mark before the command and then executing in the console window. Try this now with the command "version".
+
+## Knitting
+
+Before you can knit this .Rmd into a polished document you will need to have installed the tidyverse packages. Packages ONLY need to be installed once, but they must be loaded for each R session using the "library" command inside the a code chunk. Use the "Packages" menu in the bottom right panel to install packages, or use install.packages("package_name") at the console. You will need to have an internet connection to reach a CRAN mirror where these packages are hosted.
+
+If you have installed those packages AND any packages that they depend on, click on the Knit menu and choose "to HTML". View the document, but don't worry about any code or output that follows this header. We're taking baby steps for now, but we'll get there!
+
+------------------------------------------------------------------------
+
+# R DEMO PART 2 - Data Wrangling & EDA 1
+
+## create, import, recode, subset, describe
+
+------------------------------------------------------------------------
+
+## Creating data within R
+
+```{r}
+# Assignment, commands, vectors
+age <-  c(20:25)
+name <-  c('greg', 'sally', 'sean', 'carlos', 'becka', 'doug')  
+whoknows <-  age+5
+
+# Create dataframe from vectors
+df <- data.frame(age, name, whoknows)
+```
+
+## Metadata
+
+Metadata is information about data. Some metadata is stored as attributes. Every dataframe has at least three attributes, column names, row names and class.
+
+```{r}
+# Show the attributes of df (or any object)
+attributes(df)
+
+# Values and variables (vectors) can also have metadata
+attributes(age) # Initially returns "NULL" because we didn't add metadata
+names(age) <- name # names() is a command that adds naming metadata.
+attributes(age) # Now the values are named.  
+2*age # Don't confuse data with metadata. "age" is still an integer variable and will be treated as such.
+
+# Click the white triangle next to objects in the Environment tab to view  usefull metadata. Use the str(df) command in the console window to view the same metadata.
+```
+
+### Add a variable to df using ifelse()
+
+```{r}
+df$treat <- ifelse(test = df$age > 23, 
+                   yes = 'Young Adult', 
+                   no = 'Spring Chicken')
+```
+
+## Extract and Subset using 1) Tidyverse: select(), 2) base R: \$ and $$        $$
+
+```{r}
+# Primarily use the $ and select to pull variables from a df
+v1 <- df$whoknows # the $ operator returns a vector
+d1 <- select(df, whoknows)  # select returns a df
+
+# Be familiar with the [] and [[]] methods, but mostly avoid for subsetting. $ and select are generally more predicatable. Track the temp file in your environment as each code below is executed.
+temp <- df[c('name', 'whoknows')] # returns a df
+temp <- df[2] # returns a df
+temp <- df[2,3] # returns a vector
+temp <- df[c(1,2), c(3,4)] # retturns a df
+temp <- whoknows[2]  # returns a vector
+
+# two brackets are often used with lists but can also be used with vectors and dataframes to extract single elements only.
+temp <- df[[2]] # returns a vector
+temp <- df[[2,3]] #returns a vector
+# temp <- df[[c(1,2), c(3,4)]] # This returns an error because > 1 element. 
+```
+
+## Import, Rename, Relabel
+
+```{r}
+# Clear all objects and data from Environment
+rm(list = ls())
+
+# Read in data
+df <- read_csv(file = "data/Friends_Cholesterol.csv")
+
+# Change the name of column 3 to 'sex'
+names(df)[3] <- 'sex' 
+
+# R initially thinks sex is a numeric variable
+summary(df$sex)
+
+# Change sex to factor and rename levels
+df$sex <- factor(df$sex)       
+df$sex <- fct_recode(df$sex,
+                     'male' = '0',
+                     'female'='1')
+summary(df$sex)
+
+# Change group to factor and rename levels using pipe operator %>%.
+df$group <-
+  df$group %>%
+  factor() %>% 
+  fct_recode('control' = '0', 
+             'statin' = '1') 
+```
+
+## Create new variables using mutate from Tidyverse
+
+```{r}
+# Create one variable at a time using base r
+df$tc_i <- df$hdl_i + df$ldl_i
+df$tc_f <- df$hdl_f + df$ldl_f
+
+# Create many variables using mutate from Tidyverse
+df <- 
+  df %>%
+  mutate(tc_i = hdl_i + ldl_i,
+         tc_f = hdl_f + ldl_f,
+         bmi_i = (weight_i/(height)^2) * 703,
+         bmi_f = (weight_f/(height)^2) * 703,
+         weight_min = weight_i * 18.5 / bmi_i,
+         weight_max = weight_i * 24.9 / bmi_i)
+
+# Nested ifelse() statements to create a factor variable and a quantitative variable
+df <- 
+  df %>%
+  mutate(weight_chg_rec = ifelse(test = weight_i >= weight_max, 
+                                 yes = "decrease weight",
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = "increase weight",
+                                             no = "no change rec")),
+         weight_chg_val = ifelse(test = weight_i >= weight_max,
+                                 yes = weight_max - weight_i,
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = weight_min - weight_i,
+                                             no = 0)))
+```
+
+## Logical operators and "=" vs "=="
+
+```{r}
+# "=" can perform assignment, like x <- 4
+x = 4
+
+# Logical operators return TRUE or FALSE. They do NOT assign values. 
+x == 4 
+x == 5
+x < 4
+x <= 4
+x > 1
+x != 0
+x < 1 | x > 3  # a vertical bar "|" means "or"
+x != 0 & x > 10 # The ampersand "&" means "and"
+```
+
+## More subsetting using select() and filter() from tidyverse
+
+```{r}
+# "select" retains specific variables, returns a dataframe
+df_weight <-  
+  df %>% 
+  select(1:5, "weight_i", weight_f) 
+
+# "filter" retains specific observations, returns a dataframe
+df_males <- 
+  df %>% 
+  filter(sex=="male")
+
+# Combining select and filter with pipe operator, %>%
+# %>% reads "pass or 'pipe' into the next command"
+df_sub <-
+  df %>% 
+  select(1:5) %>%
+  filter(sex == "male",
+         height > 65 | age >= 40,   
+         group =="control",
+         name != "Donald")
+```
+
+## Descriptive Statistics
+
+```{r}
+# Simple base R commands
+mean(df$height)
+sd(df$age)
+
+# Use tapply to run a function on one variable grouped at factor levels of another.
+tapply(X = df$height, 
+       INDEX = df$sex, 
+       FUN = mean)
+
+# sapply and lapply are helpful related looping functions for dataframes and lists (not covered)
+
+# summary command works on categorical and quantitative variables
+summary(df$sex)
+summary(df$height)
+tapply(X = df$sex, 
+       INDEX = df$group, 
+       FUN = summary)
+
+# Create a summary table with tidyverse commands, group_by and summarize.These commands are usually paired and work to create a dataframe with summary statistics, grouped by one or more factor variables. Can use back ticks to break variable naming rules as shown below. I recommend limiting use of back ticks to end stage objects (graphs and tables) and for presentation purposes.
+df %>%
+  group_by(sex, group) %>%
+  summarize(Count = n(),
+            `Age Mean` = mean(age),  
+            `Age Median` = median(age),
+            `Age min` = min(age),
+            `Height Mean` = mean(height), 
+            `Height Standard D.` = sd(height)) %>%
+  kable() # kable command is from the knitr package
+
+
+# Tabulate categorical data using base R
+table(df$sex, df$group)
+
+# Tabulate categorical data using "janitor" package (Tidyverse aligned)
+library(janitor) 
+df %>%
+  tabyl(sex, group)
+
+# Output from tabyl can be "adorned" with descriptive information
+starwars %>%
+  filter(species=='Human') %>%
+  tabyl(gender, eye_color) %>%
+  adorn_totals(c("row", "col")) %>%
+  adorn_percentages("row") %>% 
+  adorn_pct_formatting(rounding = "half up", digits = 0) %>%
+  adorn_ns() %>% # adds sample size in parentheses
+  adorn_title("combined", 
+              row_name = "Gender", 
+              col_name = "Eye Color") %>% # puts gender/eye_color in upper left
+  kable %>% kable_classic()
+```
+
+## Missing Values: na.rm, complete.cases, is.na
+
+```{r}
+# import a dataframe with missing values
+df.mv <- read_csv("data/cardiac.csv")
+
+# identify variables with missing values 
+summary(df.mv)
+
+# missing values can cause problems
+mean(df.mv$weight_t2)
+
+# ignore the missing value na.rm
+mean(df.mv$weight_t2, na.rm = TRUE)
+
+# create df with/without no missing values using complete.cases
+df.mv.complete <- df.mv %>% filter(complete.cases(df.mv))
+df.mv.incomplete <- df.mv %>% filter(!complete.cases(df.mv))
+
+# remove the cases where one particular variable is "NA"
+df.mv %>% filter(!is.na(weight_t2)) %>% summary()
+
+# clear environment except df
+rm(list = setdiff(ls(), c("df")))
+```
+
+------------------------------------------------------------------------
+
+# R DEMO PART 3 - Data Wrangling 2 (Reshaping Data)
+
+------------------------------------------------------------------------
+
+## Reshape a single variable
+
+```{r}
+# Subset the dataframe for weight
+df_weight <- 
+  df %>% 
+  select(c(1:5), weight_i, weight_f) 
+
+# Reshape df_weight method 1 (most intuitive)
+df_weight_l <- 
+  df_weight %>%
+  pivot_longer(cols = 6:7,
+               names_to = "timepoint",
+               values_to = "weight")
+               
+
+# Convert timepoint to factor and relabel
+df_weight_l$timepoint <- 
+  df_weight_l$timepoint %>%
+  fct_recode("initial" = "weight_i",
+             "final" = "weight_f")
+
+
+# Reshape df_weight method 2 (more useful)
+df_weight_l <- 
+  df_weight %>%
+  pivot_longer(cols = 6:7,
+               names_sep = "_",
+               names_to = c(".value", "timepoint"))
+
+# Convert timepoint to factor and relabel
+df_weight_l$timepoint <- 
+  df_weight_l$timepoint %>%
+  fct_recode("initial" = "i",
+             "final" = "f")
+```
+
+## Reshape multiple repeated measure variables
+
+```{r}
+# Easy reshape using "_" as separator (best case scenario)
+df_l <- 
+  df %>%
+  pivot_longer(cols = weight_i:bmi_f,
+               names_sep = "_",           
+               names_to = c(".value", "timepoint"))
+
+df_l$timepoint <- 
+  df_l$timepoint%>%
+  fct_recode("initial" = "i", "final" = "f")
+```
+
+### ADVANCED: Reshaping tricky dataframes
+
+```{r}
+# Example 1 with a special character "." as separator
+df. <- read_csv("data/Friends.Cholesterol.csv")
+df.l <- 
+  df. %>%
+  pivot_longer(cols = weight.i:ldl.f,
+               names_sep = "\\.", # need backslashes when "." is separator
+               names_to = c(".value", "timepoint"))
+
+# Example 2 with no separator - use a character index
+dfno <- read_csv("data/FriendsCholesterol.csv")
+dfno.l <- 
+  dfno %>%
+  pivot_longer(cols = weighti:ldlf,
+              names_sep = -1, # separates at the last character
+               names_to = c(".value", "timepoint"))
+
+# Example 3 with no separator - rename the variables using "rename" (Tidyverse)
+dfno <- read_csv("data/FriendsCholesterol.csv")
+
+dfno <- 
+  dfno %>%
+  rename(weight_initial = weighti, 
+         "hdl_initial" = hdli, 
+         "ldl_initial" = ldli,
+         "weight_final" = weightf, 
+         "hdl_final" = hdlf, 
+         "ldl_final" = ldlf)
+
+dfno.l <- 
+  dfno %>%
+  pivot_longer(cols = weight_initial:ldl_final,
+               names_sep = "_",
+               names_to = c(".value", "timepoint"))
+```
+
+------------------------------------------------------------------------
+
+# R DEMO PART 4 - GGPLOT2
+
+------------------------------------------------------------------------
+
+### Create Scatterplot of height and weight using Object Reassignment Method
+
+```{r}
+rm(list = setdiff(ls(), c("df", "df_l")))
+# step 1) pass data to ggplot and assign to an object (sp)
+sp <- ggplot(df)
+
+# step 2) reassign object to existing object plus a geom (visual layer)
+# variables are "mapped" onto the graph using the "mapping" argument.
+sp <- sp + geom_point(mapping = aes(x=height, y=weight_i))
+
+# step 3) tell R to display the graph
+sp
+```
+
+### Single Assignment and No Assignnment Approaches
+
+```{r}
+# remove sp, confirm that sp is gone
+rm(sp)
+
+# scatterplot is created and assigned to "sp" in one line
+sp <- ggplot(df) + geom_point(mapping = aes(x=height, y=weight_i))
+sp
+
+# scatterplot is created and displayed, but not saved as an object
+ggplot(df) + geom_point(mapping = aes(x=height, y=weight_i))
+
+```
+
+### Axis labels, title, caption
+
+```{r}
+# reassign sp to existing sp plus a new layer
+sp <- ggplot(df) + 
+  geom_point(mapping = aes(x=height, y=weight_i)) + 
+  labs(x="Height (inches)", 
+       y="Weight (pounds)",
+       title = "Height and Weight of Human Subjects",
+       caption = "Figure 1. A lovely scatterplot showing...")
+sp
+```
+
+### Use facet_wrap() to create scatterplots for each sex
+
+```{r}
+sp + facet_wrap(~sex)
+```
+
+### Use color instead of facet_wrap to show sex levels on scatterplot.
+
+A "mapping" determines how variables are used on a plot. A "setting" determines how certain geom features appear. Settings do NOT involve variables. Faceting creates plots for each level of a factor variable.
+
+```{r}
+# Note that the mapping argument can be passed into the ggplot command, and it
+# will be applied to all geoms associated with this plot.
+sp <- ggplot(df, mapping = aes(x=height, y=weight_i, color = sex)) + 
+  geom_point() +
+  labs(x="Height (inches)", 
+       y="Weight (pounds)",
+       title = "Height and Weight of Human Subjects")
+sp
+```
+
+### Add a regression line for each level of sex
+
+```{r}
+# geom_smooth uses the mapping argument passed into ggplot()
+sp + geom_smooth(method = "lm",
+                 formula = y ~ x,
+                 se = FALSE)   
+```
+
+### Bar graph of average height by sex and group
+
+The stat="summary" argument tells a geom to plot a summary statistic. The summary statistic is identified by fun/fin.min/fun.max arguments. Notice below that "fill=group" happens in the mapping argument, but the "color = 'black'" happens outside the mapping argument. Mapping arguments are ONLY for mapping variables from a dataframe onto aesthetics.
+
+```{r}
+ggplot(df, mapping = aes(x=sex, y=height, fill=group)) + 
+    geom_bar(stat="summary",
+             fun = mean, # y-axis height will equal the mean
+             position = position_dodge(.95), # place bars side-by-side
+             color='black') + # include a black line around the bars
+    geom_errorbar(stat = "summary",
+                  fun = mean,
+                  fun.min = function(X) mean(X) - sd(X),
+                  fun.max = function(X) mean(X) + sd(X),
+                  position = position_dodge(.95), width=0.2) + # error bars side-by-side
+  labs(x = "sex", y = 'Mean height (inches) +/- SD')
+```
+
+### Pointrange graph with user-choosen colors & legend characterisrics
+
+```{r}
+ggplot(df, mapping = aes(x=sex, y=height, fill=group)) + 
+  geom_pointrange(stat = "summary",
+                  fun = mean, # y-axis height will equal the mean
+                  fun.min = function(X) mean(X) - sd(X),
+                  fun.max = function(X) mean(X) + sd(X),
+                  shape = 22,
+                  position = position_dodge(.95)) + # place bars side-by-side
+  labs(x = "sex", y = 'Mean height (inches) +/- SD') +
+  
+  # Change the legend details
+  scale_fill_manual(name = "Experimental Group",
+                    values = c('white', 'steelblue1'), 
+                    labels = c("control", "statin")) +
+  
+  # Change the legend location
+  theme(legend.position = c(.75, .85)) + 
+  
+  # Remove the gridlines and background and add axis lines
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black")) +
+  
+  # Put a line around the legend & set legend color scheme
+  theme(legend.background = element_rect(color = 'black', fill = 'white', linetype='solid'))
+  
+  # # Change y-axis coordinates to start at y=0
+  # coord_cartesian(ylim=c(0,75), expand = FALSE)
+```
+
+### Boxplot plot for weight at each timepoint
+
+```{r}
+# order the levels of timepoint so they appear as desired on plot
+df_l$timepoint <- ordered(df_l$timepoint, levels = c("initial", "final"))
+
+ggplot(df_l, mapping = aes(x=timepoint, y=weight)) +
+  geom_boxplot() 
+```
+
+### Create a pointrange graph from separate geoms.
+
+```{r}
+ggplot(df, mapping = aes(x=sex, y=height, fill=group)) + 
+  geom_point(stat = "summary",
+             fun = mean, # y-axis height will equal the mean
+             shape = 22,
+             size = 6,
+             position = position_dodge(.95)) + # place bars/points side-by-side
+  
+  geom_errorbar(stat = "summary",
+                  fun = mean, # y-axis height will equal the mean
+                  fun.min = function(X) mean(X) - sd(X),
+                  fun.max = function(X) mean(X) + sd(X),
+                  position = position_dodge(.95), width = 0.2) + # place bars side-by-side
+  
+  labs(x = "sex", y = 'Mean height (inches) +/- SD') +
+  
+  # Change the legend details
+  scale_fill_manual(name = "Experimental Group",
+                    values = c('white', 'steelblue1'), 
+                    labels = c("control", "statin")) +
+
+  # Change the legend location
+  theme(legend.position = c(.75, .85)) +
+  
+  # Remove the gridlines and background and add axis lines
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black")) +
+  
+  # Put a line around the legend & set legend color scheme
+  theme(legend.background = element_rect(color = 'black', fill = 'white', linetype='solid'))
+```
+
+### Bargraph of frequencies for Categorical Data
+
+```{r}
+dfc <- read_csv("data/CAMP_3280.csv")
+dfc$ETHNIC <- 
+  fct_recode(dfc$ETHNIC,
+             "black" = "b",
+             "white" = "w",
+             "hipanic/latino" = "h",
+             "other" = "o")
+dfc$GENDER <-
+  dfc$GENDER %>%
+  as.factor %>%
+  fct_recode("female" = "0",
+             "male" = "1")
+dfc %>%
+  ggplot() +
+  geom_bar(mapping = aes(x=ETHNIC, fill = GENDER),
+           position = position_dodge(.95),
+           color = 'black') +
+  scale_fill_manual(name = "Sex",
+                    values = c("white", "steelblue1"),
+                    labels = c("male", "female")) +
+  labs(x = "Ethnicity",
+       y = "Participants") +
+  
+  # Remove the gridlines and background and add axis lines
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black")) +
+  
+  # Put a line around the legend & set legend color scheme
+  theme(legend.background = element_rect(color = 'black', fill = 'white', linetype='solid')) +
+  theme(legend.position = c(.45,.65))
+```
+
+### Boxplot with outliers - seting y-limits
+
+```{r}
+dfc %>%
+  filter(!is.na(hemog)) %>%
+  ggplot(mapping = aes(x=GENDER, y=hemog)) + geom_boxplot(outlier.shape = NA) +
+  coord_cartesian(ylim = c(10, 18))
+```
