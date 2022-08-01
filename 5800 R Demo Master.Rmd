@@ -239,7 +239,7 @@ df$treat <- ifelse(test = df$age > 23,
                    no = 'Spring Chicken')
 ```
 
-## Extract and Subset using 1) Tidyverse: select(), 2) base R: \$ and $$        $$
+## Extract and Subset using 1) Tidyverse: select(), 2) base R: \$ and $$                $$
 
 ```{r}
 # Primarily use the $ and select to pull variables from a df
