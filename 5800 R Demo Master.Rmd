@@ -3,10 +3,10 @@ title: "R Studio Demo"
 author: "Steven Hobbs"
 date: "Spring 2022"
 output:
+  pdf_document: default
+  word_document: default
   html_document:
     df_print: paged
-  word_document: default
-  pdf_document: default
   html_notebook: default
 editor_options:
   chunk_output_type: console
@@ -14,29 +14,34 @@ editor_options:
 
 ------------------------------------------------------------------------
 
-# R Demo Part 1 - Markdown Basics
+# 1 MARKDOWN BASICS
 
 ------------------------------------------------------------------------
 
-Markdown files are primarily used to author documents for the web. The files are written with a "What you see is what you mean" editor, meaning that formatting options like bold, italics and underline are specified with text commands that are mixed in with the regular text. When the document is "knitted", the formatting commands are executed and the commands themselves are hidden from view. The knitted document takes the form of html, pdf or MS Word and is designed to be more readable and aesthetically pleasing than the Markdown document itself.
+## Markdown languages.
 
-R Markdown is one of many variations (more like a dialect) on the Markdown language. R Markdown files have three main parts:\
+Markdown is a lightweight language for creating formatted documents. Instead of clicking on icons and selecting formatting features from pull down menus, the desired formatting is typed into the document and subtly mixed in with the content. Formatting options like bold, italics and underline are specified with special characters that are mixed in with the regular text. When the document is "knitted" (AKA processed, parsed, rendered), the formatting commands are executed and the special characters and formatting commands are hidden from view. The knitted document typically takes the form of .html, .pdf or .docx and is designed to be more readable and aesthetically pleasing than the Markdown document itself.
 
-**1)** A YAML header at the top of the file and located between two sets of three dashes.\
-**2)** Text written in R Markdown "language".\
-**3)** Code chunks for analyzing data.
+R Markdown is one of many variations (more like a dialect) on the Markdown language. R Markdown files allow a user to write Markdown text (like what you are reading right now) and also use any of several programming languages (R, Python, SQL, etc) to analyze data all in the same document. The Markdown text is generally used to explain and interpret the analysis, while the programming languages are used to manipulate and analyze data. R Markdown files include a third language called YAML that determines some of the final knitted document characterisics, such as whether it will be a webpage (.html) a flat file (.pdf) or a MS Word document (.docx). R Markdown files are pre-structured into three parts:\
 
-The YAML header has metadata that determines how the Markdown document will be rendered or "knitted" into a polished html page (or other document). Scroll to the top of this .Rmd file to see the YAML header with it's characteristic "key:value" organization.
+## R Markdown files - 3 Parts
 
-The R Markdown text typically explains the analysis, but can be anything the user wishes. Many R textbooks are written entirely in R Markdown files and everything that isn't output or code was written in R Markdown.
+**1) A YAML header** 
+Located at the top of the file and between two sets of three dashes. The YAML header has metadata that determines how the Markdown document will be rendered or "knitted" into a polished final document. Scroll to the top of this .Rmd file to see the YAML header with it's characteristic "key:value" organization. You will not need to learn YAML or make changes to the YAML header.
+
+**2) Markdown space (white background)**
+New R Markdown files contain pre-formatted text in markdown space that helps to explain the features of the markdown file. The text you are reading now is written in markdown space. As you can see, the markdown language allows you to type in mostly plain English.
+
+**3) Code chunks (gray background)**
+Code chunks interrupt the markdown space and are areas where you can write code using R, Python, SQL and other languages. This is where the business of statistics happens! New R Markdown files come pre-formatted with several code chunks that help demonstrate the R language and functionality of an R Markdown file.
+
+One benefit of an R Markdown file is the ability to write and format text and analyze data all in one document. Many R textbooks are written entirely with R Markdown files, because of the ability to display code, tables, graphs and other types of code output, along with formatted explanations of the code. *R Markdown: The Definitive Guide* is one of many text books written entirely using R Markdown files. The source code for the book can be downloaded from this [github link](https://github.com/rstudio/rmarkdown-book).
 
 ## Code chunks
 
-Code chunks are where the R language is used to analyze data. This is where the business of statistics happens! New R Markdown files come pre-formatted with several code chunks that help demonstrate the functionality of an R Markdown wile.
+### The setup code chunk
 
-## The setup code chunk
-
-The first code chunk is the r setup code chunk:
+The first code chunk is the r setup code chunk shown below:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -44,93 +49,136 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The "setup" statement inside curly brackets relates to options that we will not utilize in this course. Everything else about this code chunk influences the appearance of our document after it is "knitted", meaning after it is converted into something more viewer friendly, such as MS Word document, PDF or an html file. Unfortunately, this first code chunk is somewhat tedious to explain, but here it goes...
 
-Like all code chunks, we begin and end with three back tick marks. These back ticks essentially tell RStudio to stop reading R Markdown text and start text written in another language that is specified inside the curly brackets.
+All code chunks begin and end with three back tick marks. These back ticks tell RStudio to stop reading R Markdown text and start reading in the programming language that is specified inside the curly brackets, in our case "r".
 
-The "include=FALSE" statement means that the code inside this particular code chunk will not appear in our knitted document.
+The "include=FALSE" statement means that the code inside this particular code chunk will not appear in our knitted document. When you eventually knit this document, the code above will not be visible. In fact, now is a great time to click the "Knit" button above this panel. Wait several seconds to a minute for the file to be rendered. Periodically compare the knitted document to this one as you continue reading through this Markdown file.
 
-The single command in the middle of the code chunk will establish a default behavior for all code chunks that follow, which is to show the code written inside chunks in the knitted document. The command uses the double colon operator, "::", to reach into a package called knitr and grab a command called "opts_chunk". Packages like knitr provide commands that extend the functionality of R. These packages are created and then donated by R users all over the world and are largely why R has become such a powerful language.
+The single command in the middle of the code chunk will establish a default behavior for all code chunks that follow. In this case that behavior, is to show R code in the knitted document. Sometimes we change this argument to "FALSE" when we want our audience to ignore the code and only see the output and our explanations written in markdown. The double colon operator, "::", is a special command for reaching into software packages and grabbing commands. In this case, the :: is used to reach into the software package called knitr and grab the command called "opts_chunk".
 
-The knitr package ("knit r") provides commands that help customize the appearance of a knitted document. In this case, we use the opts_chunk command from knitr to set the default echo parameter to TRUE. This means that the code we write inside of chunks will also appear in our knitted document. However, the "include = FALSE" command inside the curly brackets overrides the default for this particular code chunk, meaning we will not see this particular code chunk echoed in the knitted document.
+### Executing code
 
-We can (and often do) change the echo argument to "FALSE", such as when we want our reader to primarily see the tables, graphs and other types of output that we create and ignore the tedious code.
+Below is a new code chunk that performs some basic math and creates a plot using R. Here are several ways to execute the commands in this code chunk:
 
-The knitr package (like all packages) has many other commands as well. However, sometimes the commands inside of packages have conflicts with base R commands or other packages. The approach above using :: avoids potential conflicts by implementing just the one command (opts_chunk) without actually installing the knitr package.
+1. Execute the entire code chunk. Click the green arrow at the top right of the code chunk.
+2. Execute the entire code chunk. With the cursor on any line of code, press "shift" + "Command" + "Enter".
+3. Execute a single line. With the cursor anywhere on a line of code, press "Command" + "Enter" or "Control" + "Enter". 
+4. Execute all code chunks above a code chunk. Click the icon to the left of the green arrow at the right of a code chunk.
+5. Execute all code chunks. Select this option from the "Run" pull down menu at the top right of this panel.
 
-As it turns out the knitr package has many useful commands and few (if any) conflicts. As such, I recommend changing the code to load the knitr package and then use the opts_chunk command on a separate line. Let's eliminate "include = FALSE" through, just so that we see this code chunk in the knitted document:
+```{r}
+2 + 2
+3^2
+x=-10:10
+y=x^2
+plot(x,y)
+```
+
+
+## Packages
+
+Software packages like knitr provide commands that extend the functionality of R. These packages are created and donated by R users all over the world. R packages must be installed once on your personal computer, just like for any other software, and then loaded within a R Markdown document before they can be used. Newer versions of R Studio are capable of detecting packages that are needed but not installed on your computer. Check above this panel in R Studio for any messages to this affect. Click "Install" for any packages that R recognizes are missing.
+
+The knitr package ("knit r") provides commands that help customize the appearance of a knitted document. In the setup code chunk, we used the opts_chunk command from knitr to set the default echo parameter to TRUE. This means that the code we write inside of subsequent code chunks will also appear in our knitted document. However, the "include = FALSE" command inside the curly brackets overrides the default for any particular code chunk, meaning we will not see setup code chunk echoed in the knitted document.
+
+The knitr package (like all packages) has many other commands as well. Sometimes the commands inside of packages have conflicts with base R commands or other packages. As mentioned above, the setup file in new R Markdown file uses "::" to avoid these potential conflicts by pulling the opts_chunk command out of the knitr package, without actually loading the entire knitr package.
+
+As it turns out, the knitr package has many useful commands and few (if any) conflicts for basic statistical analyses. As such, I recommend changing the setup code chunk to load the knitr package and then use the opts_chunk command on a separate line. Let's recreate this code chunk below and eliminate "include = FALSE" from the curly braces, so that we see this code chunk in the knitted document:
 
 ```{r}
 library(knitr) # The library command is used to load individual packages.
 opts_chunk$set(echo = TRUE)
 ```
 
-### Loading multiple packages
+Note that this code chunk is missing "setup" in the curly braces. Only one code chunk can function as the setup code chunk, so we must omit this component.
 
-If you know in advance that you will use many packages in your analysis, you can add multiply library commands to this code chunk.
+### Loading multiple packages (library commands)
+
+If you know in advance that you will use many packages in your analysis, you can add multiple library commands to this code chunk. All of the packages below must have already been installed at some point before they can be loaded.
 
 ```{r}
 library(knitr)
 opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(magrittr)
+library(kableExtra)
 ```
 
 Note that when a package is first loaded, R will display messages indicating if the load was successful, if conflicts exist and if other commands are masked by commands in the new package.
 
-### Loading multiple packages (better) & hiding messages
+### Loading multiple packages (p_load)
 
-Because writing multiple library commands is a bit tedious, I often modify the setup code chunk even further to use p_load from the pacman package to simultaneously load multiple packages. Including "message=FALSE" and "warnings = FALSE" in the opts_chunk\$set command will hide messages in the knitted document as shown below for the kableExtra package.
+Because writing multiple library commands is a bit tedious, I often use p_load from the pacman package to simultaneously load multiple packages. Also, to avoid showing messages and warnings that R produces when packages are loaded, use "message=FALSE" and "warnings = FALSE" in the set command as shown below.
 
 ```{r}
 opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 pacman::p_load(knitr, tidyverse, magrittr, kableExtra)
 ```
 
-### Finishing Setup
-
-In every new Markdown file, delete everything AFTER the setup code chunk. You will replace these "demo" code chunks with chunks that are specific to your analysis.
-
 ## Markdown formatting
 
-You can write *mostly* plan text in an R Markdown document. However, there are some basic ways to format text as you go for a more polished appearance. The more polished appearance is created when the Markdown file is rendered or "knitted". For example, you can use asterisks to create bold or italic font in the knitted document as shown below:
+You can write *mostly* plan text in an R Markdown document. However, there are some basic ways to format text for a more polished appearance. The more polished appearance is created when the Markdown file is rendered or "knitted". For example, you can use asterisks to create bold or italic font in the knitted document as shown below:
 
 *italics*\
 **bold**\
-**bold again**
+***bold and italics***
 
-Note that you will not see the formatting applied until the the document is knitted, or unless you are using the visual editor (available under the settings pull down menu). Markdown has a few quirky formatting features. Leaving a blank line on your Markdown document will also leave a blank line in the knitted document. However, without that blank line, text on sequential lines will run together, unless two spaces or a backslash are left at the end of a line. The *italics* shown above has those spaces and the **bold** has the backslash. The three lines of bold text below have neither spaces nor a backslash. Compare their polished appearance after you've knitted the document:
+Note that you will not see the formatting applied until the the document is knitted, or unless you are using the visual editor, which you should avoid for now. Markdown has a few quirky formatting features. Leaving a blank line on a Markdown document will also leave a blank line in a knitted document. However, without that blank line, text on sequential lines will run together, unless either two spaces or a backslash are left at the end of a line. The three lines of bold text below have neither two spaces nor a backslash at the end of the line and will run together when the document is knitted.
 
-**this text will run together** **with this text on one line** **in the knitted document**
+**this text will run together** 
+**with this text on one line** 
+**in the knitted document**
 
-## Headers can also be created with hashtags. One hashtag creates the largest header (like for "R Demo Part 1 - Markdown Basics").
+### Hashtag Features in R Markdown space
 
-## Adding more hashtags create smaller headers
+Hashtags followed by a space have three important and related features in R Markdown:
 
-###### 6 hashtags create the smallest header. So small... am I even worthy to be called a header?
+#### Feature 1 - Collapsible document sections
 
-The space after the hashtag is critical! If you omit the space, the text will not be formatted as a header.
+Hashtags followed by a space create collapsible sections of the R Markdown file. Notice the small gray arrow to the left of the hashtags above. Click on the arrow a few times to see what happens. You'll notice that large sections of the Markdown document collapse into a single line, leaving only the text next to the hashtag visible as a header. Sections with more hashtags become nested within sections with fewer hashtags. Essentially, the hashtags allow an outline of headers to be built into the R Markdown file.
 
-Hashtags have another useful function. Notice the triangle next to each hashtag in the .Rmd file? Click on those triangles to see what they do. Go on, I dare you.
+#### Feature 2 - R Studio outline
 
-## Use headers to organize code!
+You can imagine that when an R Markdown file grows to hundreds or thousands of lines, getting lost in these documents happens easily. R Studio provides a handy outline feature based on hashtag headers in Markdown space. Click on the Outline button in the upper right of this window and expand the window that opens. Every entry corresponds to a place in the document where a hashtag header has been created. Clicking within this outline takes you to that part of the document. Click around a bit, but then come back to this section and close the outline if you need monitor space.
 
-Hopefully you observed that hashtags also create nested collapsible sections of your code. The space after each hashtag is also critical for this function. Think of a .Rmd file as an instruction manual or technical text book with big chapters indicated by a single hashtag, sub chapters by two hashtags, paragraphs by three hashtags, etc.
+#### Feature 3 - Knitted document headers
 
-## Let's write some code!
+Hashtag headers appear in larger, darker font in the knitted document. One hashtag creates the largest header (like for "1 MARKDOWN BASICS"). You'll have to knit the document to see these features. If you haven't done so already, knit this document by clicking on "Knit" above this panel.
 
-## Writing code inline with text
+**Important Tip** The space after the hashtag is critical! The text will not be formatted as a header in the knitted document without that space. Notice how the text below appears in the knitted document.
 
-R code *can* be mixed in with text using back ticks as demonstrated below. The code will be placed by the output in the knitted document. To see the output before knitting, place the cursor inside the tick marks below and press "command + enter".
+####Not a header because a space is missing after the hashtags.
+
+### Use headers to organize your document!!!
+
+Think of a .Rmd file as an instruction manual or text book with big units indicated by a single hashtag, chapters by two hashtags, chapter sections by three hashtags, etc.
+
+### More Markdown Features
+
+Download the [R Markdown Cheat Sheet] (https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) for more markdown features.
+
+
+------------------------------------------------------------------------
+
+# 2 LET'S WRITE SOME CODE!
+
+------------------------------------------------------------------------
+
+## Writing code inline with text (use judiciously)
+
+R code *can* be mixed in with text using back ticks as demonstrated below. The code will be replaced by the output in the knitted document. To see the output in the R Markdown file (before knitting), place the cursor inside the tick marks below and press "command + enter".
 
 Two plus two = `r 2+2`
 
 ## Writing code inside code chunks (mostly do this)
 
-VASTLY more useful is to place many lines of code inside of those chunks that begin and end with 3 tick marks.
+Anytime you write multiple lines of code that work together, placing the code inside of code chunks is more useful.
 
-Execute the code chunk below by any of three ways:\
-1) With the cursor inside the chunk hit "shift + command/control + return/enter"\
-2) Click the green triangle at far right\
-3) Use the Run pull down menu and choose an option
+Again, several ways to execute code and code chunks exist:\
+
+1. With the cursor inside the chunk hit "shift + command/control + return/enter"
+2. Click the green triangle at far right\
+3. Use the Run pull down menu and choose an option.
+4. Place the cursor anywhere on any line and press "command/control + return/enter".
 
 ```{r}
 print("Hello World")
@@ -139,17 +187,22 @@ y <-  x^2
 df <- data.frame(x, y) 
 ```
 
-Any visible output will appear below the chunk and in the console window. Also check the Environment panel (upper right) for objects that were created by use of the assignment operator, which is a less than sign followed by a dash.
+Any visible output will appear in the console window and possibly below the chunk depending on your settings. Also check the Environment panel (upper right) for objects that were created by executing the code chunk. The assignment operator, "\<-", is used to create objects like variables and dataframes.
 
-New code chunks can be created with "command/control + option/alt + i" or using the insert menu.
+*Importat Tip*: New code chunks can be created with the shortcut keys "command/control + option/alt + i" or by using the insert pull down menu that has a capital C with a plus sign (top right, above this panel).
+
+## Comments vs Headers
+
+Hashtags inside of code chunks function very differently than when used in Markdown space. Inside of code chunks, hashtags tell R to simply ignore the text that follows. These hashtags create comments within code chunks that are used to provide short explanatory messages as shown below:
 
 ```{r}
 # hashtags inside of code chunks create comments that are not "executed".
-# This is a boring graph using base R
+# The code below creates a boring graph using base R
 plot(x = df$x, y = df$y)
 ```
 
-Inside an r chunk, individual lines of code can be executed using the short cut keys "command/control + return/enter". The cursor can be anywhere on the target line and each execution advances the cursor to the next line. Execute individual commands in the code chunk below (hidden from html file) using shortcut keys and without moving the cursor between executions. Pause after each execution to consider what each command accomplished.
+
+**Practice** Use shortcut keys to execute individual commands in the code chunk below (hidden from html file) and avoid without moving the cursor between executions. Pause after each execution to consider what each command accomplished.
 
 ```{r, include = FALSE}
 # Explore the mtcars dataset that comes with R
@@ -158,26 +211,45 @@ head(mtcars)
 str(mtcars) 
 names(mtcars) 
 rownames(mtcars) 
+```
 
-# Subset & Extract with base r
-mtcars["Datsun 710", ] 
-mtcars["Datsun 710", "hp"]
-mtcars[3, 4]
+## Commands and arguments
 
-# Descriptive Statistics with base r
-mean(mtcars$hp)
-summary(mtcars$hp) 
+In general, commands perform actions on objects that are passed into commands as arguments. The actions of commands can be modified by additional arguments. Everything passed into the parentheses of a command is an argument, regardless of what that argument is or does. Arguments are separated by commas.
 
-# Using tidyverse commands, "select" and pipe operator "%>%". The pipe operator takes whatever is to the left of %>% and passes that into the first argument of a command on the right of %>%. The two lines below function identically, but the %>% helps readibility. 
-summary(select(mtcars, hp)) 
-mtcars %>% 
-    select(hp) %>% 
+The plot command below contains 4 arguments that identify the data to be plotted on the x and y axis, and the optional arguments that customize the x and y axis laebls. All arguments have names (x, y, xlab and ylab below), but these names can often be avoided if the arguments are presented in the exact order that r expects. However, I recommend using argument names to make your code readable to and to avoid errors.
+```{r}
+plot(x = mtcars$wt, y = mtcars$mpg, xlab = "Weight", ylab = "miles per gallon") 
+
+# Avoiding argument names and optional arguments.
+plot(mtcars$wt, mtcars$mpg) 
+```
+
+
+## Piping commands with "%>%"
+
+The Tidyverse pipe operator, %>%, allows code to follow a more natural reading pattern, which is left to right and top to bottom. The %>% operator takes the output of code to the left of the operator and passes that into the first argument of a command on the right. This is called piping and is a feature of many programmign languages. Below is an example of the pipe operator in use. The line of code would read something like "start with mtcars, select the column called hp, summarize the values.
+
+```{r}
+mtcars %>% select(hp) %>% summary
+
+# or equivalently
+mtcars %>%
+    select(hp) %>%
     summary
+```
+
+## Nesting commands (not piping)
+
+An equivalent line of code without piping is shown below. Notice that command execution begins with the inner most nested command and proceeds outwardly. This inside-out order makes complicated commands with multiple nested layers difficult to read and write.
+
+```{r}
+summary(select(mtcars, hp))
 ```
 
 ## Writing code in the console window
 
-Single lines of code can be written in the console window, but are not saved and can't be edited after they have been executed. The console window is best for experimenting with short lines of code, accessing help files, installing packages, and other tasks that do not need to be included in a master code document.
+Single lines of code can be written in the console window. This code can not be saved or edited after execution. The console window is best for experimenting with short lines of code, accessing help files, installing packages, and other tasks that do not need to be included in a master code document.
 
 ## Videos, Tutorials, Cheatsheets & More Help
 
@@ -190,33 +262,49 @@ Single lines of code can be written in the console window, but are not saved and
 
 ## Knitting
 
-Before you can knit this .Rmd into a polished document you will need to have installed the tidyverse packages. Packages ONLY need to be installed once, but they must be loaded for each R session using the "library" command inside the a code chunk. Use the "Packages" menu in the bottom right panel to install packages, or use install.packages("package_name") at the console. You will need to have an internet connection to reach a CRAN mirror where these packages are hosted.
+Unless you have already knitted this document, before you can do so you will need to have installed all the packages used in library commands (knitr, tidyverse, pacman, magrittr, kableExtra). Packages ONLY need to be installed once (like any other software) on a computer. Use the "Packages" menu in the bottom right panel to install packages, or use install.packages("package_name") in the R console. Do NOT include install.package commands inside an R Markdown chunk. This is useless and time consuming. You will need to have an internet connection to reach a CRAN mirror where these packages are hosted and made available for installation.
 
-If you have installed those packages AND any packages that they depend on, click on the Knit menu and choose "to HTML". View the document, but don't worry about any code or output that follows this header. We're taking baby steps for now, but we'll get there!
-
-------------------------------------------------------------------------
-
-# R DEMO PART 2 - Data Wrangling & EDA 1
-
-## create, import, recode, subset, describe
+If you have installed those packages AND any packages that they depend on, click on the Knit menu and choose "to HTML". View the document that is created. If the knit fails, read the error messages and try to fix the problem. Often this means installing additional packages called dependencies. Seek a TA for help if necessary.
 
 ------------------------------------------------------------------------
 
-## Creating data within R
+# 3 DATA WRANGLING I: Working with data
+
+------------------------------------------------------------------------
+
+## Create data within R
+
+We use the assignment operator to create vectors, which are just collections of values, separated by commas. String values must be quoted with either single or double quotes. Numeric values are not quoted. The "c" command below means collect, combine or concatenate, and is necessary when we have multiple values that we wish to pull together into a vector.
 
 ```{r}
-# Assignment, commands, vectors
 age <-  c(20:25)
 name <-  c('greg', 'sally', 'sean', 'carlos', 'becka', 'doug')  
 whoknows <-  age+5
+```
 
-# Create dataframe from vectors
+## Dataframes
+
+Dataframes are the main data structure used for manipulating and analyzing data in R. A dataframe is essentially a rectangular arrangement of varaibles in columns and observations in rows. Dataframes can be created from vectors using the data.frame() command.
+
+```{r}
 df <- data.frame(age, name, whoknows)
 ```
 
-## Metadata
 
-Metadata is information about data. Some metadata is stored as attributes. Every dataframe has at least three attributes, column names, row names and class.
+## Using the extraction operator "$" with dataframes
+
+The base R extraction operator is the dollar sign, \$. This command pulls a single column out of a dataframe as a vector. The extracted column is no longer dataframe, but is instead a vector. More generally, the \$ pulls smaller objects out of larger objects. Note that when writing this character in markdown space I sometimes use put a backslash before the character. The backslash is an escape character and is used because the dollar sign has a different meaning in Markdown language that we sometimes wish to avoid.
+
+Let's extract a variable from the df dataframe and then show summary information for the extracted variable.
+
+```{r}
+v1 <- df$whoknows 
+summary(v1)
+```
+
+### Metadata
+
+Metadata is information about data. Some metadata is stored as attributes. Every dataframe has at least three attributes, column names, row names and class. Click the white triangle in blue circle icon next to objects in the Environment tab to view useful metadata. You can also use the str(df) command in the console window to view the same metadata.
 
 ```{r}
 # Show the attributes of df (or any object)
@@ -225,109 +313,22 @@ attributes(df)
 # Values and variables (vectors) can also have metadata
 attributes(age) # Initially returns "NULL" because we didn't add metadata
 names(age) <- name # names() is a command that adds naming metadata.
-attributes(age) # Now the values are named.  
-2*age # Don't confuse data with metadata. "age" is still an integer variable and will be treated as such.
-
-# Click the white triangle next to objects in the Environment tab to view  usefull metadata. Use the str(df) command in the console window to view the same metadata.
+attributes(age) # Now the values are named. This is truly unnecessary because we have a separate calumn for names. 
+2*age # Don't confuse data with metadata. Even though age now has a name attribute, the age variable is still an integer variable.
 ```
 
-### Add a variable to df using ifelse()
+### Logical operators
 
+Some variables and some statements are "logical" meaning that they take on a value of TRUE or FALSE. Logical statements use a collection of operators that appear similar to math expressions, but which always return a value of TRUE or FALSE. Logical statements are often used in ifelse statements to create new variables. Consequently, we need to understand logical statements before we can understand ifelse statements.
+
+**Important tip** The "=", is NOT a logical operator. "=" is used to create objects by assignment, just like the assignment operator. For example... 
 ```{r}
-df$treat <- ifelse(test = df$age > 23, 
-                   yes = 'Young Adult', 
-                   no = 'Spring Chicken')
-```
-
-## Extract and Subset using 1) Tidyverse: select(), 2) base R: \$ and $$                $$
-
-```{r}
-# Primarily use the $ and select to pull variables from a df
-v1 <- df$whoknows # the $ operator returns a vector
-d1 <- select(df, whoknows)  # select returns a df
-
-# Be familiar with the [] and [[]] methods, but mostly avoid for subsetting. $ and select are generally more predicatable. Track the temp file in your environment as each code below is executed.
-temp <- df[c('name', 'whoknows')] # returns a df
-temp <- df[2] # returns a df
-temp <- df[2,3] # returns a vector
-temp <- df[c(1,2), c(3,4)] # retturns a df
-temp <- whoknows[2]  # returns a vector
-
-# two brackets are often used with lists but can also be used with vectors and dataframes to extract single elements only.
-temp <- df[[2]] # returns a vector
-temp <- df[[2,3]] #returns a vector
-# temp <- df[[c(1,2), c(3,4)]] # This returns an error because > 1 element. 
-```
-
-## Import, Rename, Relabel
-
-```{r}
-# Clear all objects and data from Environment
-rm(list = ls())
-
-# Read in data
-df <- read_csv(file = "data/Friends_Cholesterol.csv")
-
-# Change the name of column 3 to 'sex'
-names(df)[3] <- 'sex' 
-
-# R initially thinks sex is a numeric variable
-summary(df$sex)
-
-# Change sex to factor and rename levels
-df$sex <- factor(df$sex)       
-df$sex <- fct_recode(df$sex,
-                     'male' = '0',
-                     'female'='1')
-summary(df$sex)
-
-# Change group to factor and rename levels using pipe operator %>%.
-df$group <-
-  df$group %>%
-  factor() %>% 
-  fct_recode('control' = '0', 
-             'statin' = '1') 
-```
-
-## Create new variables using mutate from Tidyverse
-
-```{r}
-# Create one variable at a time using base r
-df$tc_i <- df$hdl_i + df$ldl_i
-df$tc_f <- df$hdl_f + df$ldl_f
-
-# Create many variables using mutate from Tidyverse
-df <- 
-  df %>%
-  mutate(tc_i = hdl_i + ldl_i,
-         tc_f = hdl_f + ldl_f,
-         bmi_i = (weight_i/(height)^2) * 703,
-         bmi_f = (weight_f/(height)^2) * 703,
-         weight_min = weight_i * 18.5 / bmi_i,
-         weight_max = weight_i * 24.9 / bmi_i)
-
-# Nested ifelse() statements to create a factor variable and a quantitative variable
-df <- 
-  df %>%
-  mutate(weight_chg_rec = ifelse(test = weight_i >= weight_max, 
-                                 yes = "decrease weight",
-                                 no = ifelse(test = weight_i <= weight_min,
-                                             yes = "increase weight",
-                                             no = "no change rec")),
-         weight_chg_val = ifelse(test = weight_i >= weight_max,
-                                 yes = weight_max - weight_i,
-                                 no = ifelse(test = weight_i <= weight_min,
-                                             yes = weight_min - weight_i,
-                                             no = 0)))
-```
-
-## Logical operators and "=" vs "=="
-
-```{r}
-# "=" can perform assignment, like x <- 4
 x = 4
+```
 
-# Logical operators return TRUE or FALSE. They do NOT assign values. 
+The Logical operators below return TRUE or FALSE. They do NOT assign values. Run the commands one at a time and pay close attention to the output (TRUE or FALSE).
+
+```{r}
 x == 4 
 x == 5
 x < 4
@@ -338,31 +339,260 @@ x < 1 | x > 3  # a vertical bar "|" means "or"
 x != 0 & x > 10 # The ampersand "&" means "and"
 ```
 
-## More subsetting using select() and filter() from tidyverse
+
+### Using ifelse() to create new variables
+
+Now that we understand logicals, we can use the ifelse command to create new variables. Three arguments are essential to an ifelse statement:
+
+1. test = , a logical statement that evalutes to TRUE or FALSE
+2. yes = , identifies a value to return if the test returns TRUE.
+3. no = , a value to return if the test returns FALSE.
+
+Below we use an ifelse statement with a logical test argument to create a new variable called treat. Note that we are using the extraction operator with df$treat to insert a new variable into the df dataframe. In this case "extraction" isn't the best name for the operator, because really we are doing the opposite. View the df dataframe after running the code chunk below. 
 
 ```{r}
-# "select" retains specific variables, returns a dataframe
-df_weight <-  
-  df %>% 
-  select(1:5, "weight_i", weight_f) 
-
-# "filter" retains specific observations, returns a dataframe
-df_males <- 
-  df %>% 
-  filter(sex=="male")
-
-# Combining select and filter with pipe operator, %>%
-# %>% reads "pass or 'pipe' into the next command"
-df_sub <-
-  df %>% 
-  select(1:5) %>%
-  filter(sex == "male",
-         height > 65 | age >= 40,   
-         group =="control",
-         name != "Donald")
+df$treat <- ifelse(test = df$age > 23, 
+                   yes = 'Young Adult', 
+                   no = 'Spring Chicken')
 ```
 
-## Descriptive Statistics
+# 4 SUBSET DATA
+
+## Subsetting with Tidyverse commands (select and filter)
+
+The Tidyverse package consists of several packages that form an ecosystem of commands that follow the same general structure and which are mostly optimized to work with dataframes. Many of the most popular commands for manipulating and summarizing dataframes come from the dplyr package within the tidyverse package. The select and filter commands shown below are examples, but many more are available. The [dplyr vignette](https://dplyr.tidyverse.org/) provides explanations and examples of how to use these commands, as well as a downloadable [Cheat Sheet](https://github.com/rstudio/cheatsheets/raw/main/data-transformation.pdf).
+
+View each dataframe below after running the code.
+
+```{r}
+# select() creates a smaller dataframe by selecting 1 or more specific columns
+d1 <- select(df, name)  
+d2 <- select(df, name, age)
+
+# filter() uses logical statements to reduce the rows of a dataframe to those that return TRUE for all arguments.
+d3 <- filter(df, age >= 21, treat == 'Spring Chicken')
+
+# select and filter can be combined using the pipe operator. White space has been added below to make the code more readable.
+d4 <- 
+    df %>% 
+    select(age, treat) %>% 
+    filter(age >= 21, treat == 'Spring Chicken')
+```
+
+## Subset with Base R brackets (AKA braces)
+
+### Single Brackets [ ]
+
+Be familiar with the [ ] and [[ ]] methods. These are quick and useful and you'll see them searching the internet of help vignettes for coding solutions. However, tidyverse commands are generally easier to read and understand. Also, the select() command always returns a dataframe, which is the data structure most used in data analysis and other tidyverse commands. The objects extracted by brackets may not be of the same type as the parent object and may not work with other tidyverse commands. To demonstrate the variety of bracket uses, run each code below one at a time and track the "temp" file in your environment. Note when temp is created as a dataframe versus a vector (AKA value).
+
+```{r}
+temp <- df[c('name', 'whoknows')] 
+temp <- df[2] 
+temp <- df[2,3] 
+temp <- df[c(1,2), c(3,4)] 
+temp <- whoknows[2]  
+```
+
+### Double brackets [[ ]]
+
+Two nested brackets are often used with a data structure called a list, but can also be used with vectors and dataframes to extract single elements as vectors. For most analysis and anytime we are working with dataframes, we won't use the double brackets.
+
+```{r}
+temp <- df[[2]] 
+temp <- df[[2,3]] 
+# temp <- df[[c(1,2), c(3,4)]]  
+```
+
+------------------------------------------------------------------------
+
+# 5 DATA WRANGLING II: Import & Recode
+
+------------------------------------------------------------------------
+
+Often the first obstacle to data analysis is just getting the data into your software application. Data can come to us in a dizzying variety of formats including .csv, .txt, .json, .xls, .Rdata, and many, many others. R can handle most all data formats, but uses different commands for different file types. For this course, we will mostly work with .csv data and use the read_csv command from the tidyverse package. Note that this is a different command than read.csv, a base R command with less functionality.
+
+Before importing data, let's clear our environment of all the dataframes and values we have saved in cache memory. This is good practice whenever importing or transitioning to new data sets within a project, as values and variables may overlap between data sets.
+
+```{r}
+# Clear all objects and data from Environment. Can also click the broom icon in the Environment tab.
+rm(list = ls())
+```
+
+### read_csv
+
+```{r}
+df <- read_csv(file = "data/Friends_Cholesterol.csv")
+```
+
+The read_csv command above takes a file path as the first argument. The command uses this file path to find and reach into the file on your computer and then copy the values from the file into a dataframe called "df". Understand that we have only temporarily "opened" the file with R Studio to take a snapshot of the data and then close the file. Any changes we make to the dataframe called df will have no effect on the original data stored in Friends_Cholesterol. This is an important feature that protects the integrity of raw data, by preventing the analysis from changing the raw data.
+
+### Absolute & Relative File Paths
+
+At this point, you might be wondering, how exactly did R find the Friends_Cholesterol.csv file from a short and incomplete file path? Normally, applications need a file path that starts at the root directory, the very top level of everything on your hard drive, and proceeds through all nested directories (folders) to the target file. This long and complete file path is called an **absolute file path** and is unique to every file on every computer. On my computer, the absolute file path to the Friends_Cholesterol.csv file is...
+
+*/Users/stevenhobbs/Documents/3_Current_Classes/3.5800_SP22/2.R_Projects/5800_Master_R\_Demo/data/Friends_Cholesterol.csv*.
+
+How did we avoid typing this lengthy file path? R Studio Projects! R Studio Projects (like this one) create their own home directory, essentially a new starting point for R to look for files with import commands like read_csv. Because the Friends_Cholesterol.csv file is located inside the data folder, which in turn is located inside the R Project folder "5800_Master_R\_Demo", we can get away with providing the file path that is *RELATIVE* to the R project folder. An incredibly useful side effect is that the project folder (and all contents) can be moved anywhere on your computer, or even transferred to a new computer, and the **relative file paths** will be unchanged and functional. For this reason, I recomend that you *ALWAYS* use relative file paths to import data.
+
+**Important tip** Do not confuse the R Project folder with the R Markdown file. Click on the **Files** button in the bottom right R Studio panel and then click on the blue box with an R at the far right. You should now see a list of all the files inside the R Project folder. You should see the Data folder as well as .Rproj and .Rmd files. The .Rproj file does the magic that allows us to use relative file paths. The .Rmd file is where we write Markdown text and R code to create a document such as this one. If you don't see the blue box with an R , you mostly likely opened this .Rmd file *outside* of the .Rproj. The solution is to close the .Rmd file and then open the .Rproj file before opening the .Rmd file.
+
+## Recoding Data
+
+Raw data is often coded in ways that are problematic for analysis, difficult for human interpretation, or fraught with other problems.
+
+For example, the Friends_Cholesterol data has a variable called gender that has 3 problems:
+
+1.  The variable should be called sex (there is a difference).
+2.  The variable has values that are 0 or 1, but should be "male" and "female".
+3.  The gender/sex variable is numeric, but should be a factor (categorical) variable.
+
+Similar problems exist for the group variable, which should be a factor variable coded as "treat" or "statin".
+
+Correcting the variable type is crucial, because variable type determines the way commands operate on the data. We can fix these issues (and many others) during the initial import using tidyverse commands **"piped"** into a chain as shown below. Most of the commands used for this process come from the dplyr and forcats packages that are loaded with tidyverse.
+
+[**dplyr**](https://dplyr.tidyverse.org/) contains tidyverse commands that are designed to work on dataframes.
+
+[**forcats**](https://forcats.tidyverse.org/) contains tidyverse commands that are designed to work on factor variables, and which all begin with the prefix "fct".
+
+#### Recode with import pipe chains
+
+Run the code chunk below and then read the explanatory text that follows. 
+
+```{r}
+df <- 
+    read_csv(file = "data/Friends_Cholesterol.csv",
+             col_types = "cnfnfnnnnnn") %>%
+    rename(sex = gender) %>%
+    mutate(sex = fct_recode(sex,
+                            'male' = '0',
+                            'female' = '1'),
+           group = fct_recode(group,
+                              'control' = '0', 
+                              'statin' = '1'))
+```
+
+Let's dissect the commands and arguments built into this pipe chain:
+
+**coltypes =**
+
+This optional argument to the read_csv() command provides a string of characters that identify the desired type of every variable in the imported data. This argument overrides the often incorrect default variable types that R assumes based on the dataframe values. The length of this string must match the number of variables exactly. For most imports we need only three letters to identify our variable types: c = character, n = numeric, f = factor.
+
+**rename()**
+
+This command takes a dataframe as its first argument (piped in above from the output of read_csv) and then uses the format <new> = <old> to rename a column.
+
+**mutate()**
+
+Mutate takes a dataframe (piped in above from the output of rename) and creates new variables from existing variables, or saves over an existing variable after mutating it in some useful way. Here we use the fct_recode command inside the mutate command to re-label levels of the sex variable.
+
+Piping chains like the one used above rely upon an important design feature. Each use of the pipe operator pulls a dataframe from the left and inserts it into the command to the right as the very first argument. This means the command that comes before the pipe operator must output a dataframe, and the command to the right of the pipe operator must take in a dataframe as the very first argument. Most tidyverse commands are designed with piping in mind and work together as an "ecosystem" of commands. However, commands like fct_recode() that take in a vector (a single column) as their first argument can not be used as a direct link in the piping chain. They should instead be used within mutate as shown in this example.
+
+#### Recode without import pipe chains
+
+While the above piping chain can be broken out into individual commands as shown below, this results in more typing, worse readability, and greater potential for warnings and errors that occur when individual commands are executed more than once. For example, after running the entire code chunk below, run just the fct_recode(df\$sex...) command again and you should see a warning message in the console window.
+
+```{r}
+# Read in data and save over the existing df dataframe
+df <- read_csv(file = "data/Friends_Cholesterol.csv")
+
+# Change the name of column 3 to 'sex'
+names(df)[3] <- 'sex' 
+
+# Change sex to factor and rename levels
+df$sex <- factor(df$sex)       
+df$sex <- fct_recode(df$sex,
+                     'male' = '0',
+                     'female'='1')
+
+# Change group to factor and rename levels using pipe operator %>%.
+df$group <-
+  df$group %>%
+  factor() %>% 
+  fct_recode('control' = '0', 
+             'statin' = '1') 
+```
+
+**Important tip:** Regardless of the commands and approach used, best practice is to solve recoding and data wrangling problems in the same code chunk as the data import command, and *before* using the dataframe to run analyses, create graphs, etc. If you discover additional problems with the data later in your analysis, return to the data import code chunk to fix the problems and re-run the code chunk before resuming the analysis.
+
+------------------------------------------------------------------------
+
+# 6 DATA WRANGLING III: New variables
+
+------------------------------------------------------------------------
+
+### Create new variables with mutate
+
+Note that the process below can be included in a pipe chain during the initial data import. Also, the process below is less typing than the base R equivalents because the dataframe need only be specified once.
+
+```{r}
+# Create 6 new variables using mutate from Tidyverse
+df <- 
+  df %>%
+  mutate(tc_i = hdl_i + ldl_i,
+         tc_f = hdl_f + ldl_f,
+         bmi_i = (weight_i/(height)^2) * 703,
+         bmi_f = (weight_f/(height)^2) * 703,
+         weight_min = weight_i * 18.5 / bmi_i,
+         weight_max = weight_i * 24.9 / bmi_i)
+```
+
+### New variables using base R
+
+As shown before with ifelse statements, the extraction operator from base R can also be used to create new variables. 
+
+```{r}
+# Create 2 new variables use base r
+df$tc_i <- df$hdl_i + df$ldl_i
+df$tc_f <- df$hdl_f + df$ldl_f
+```
+
+## Using ifelse statements with mutate to create new variables
+
+In the example below, we use an iflse statement to create an obese_i variable, and then show the first 6 rows of a selection of variables.
+
+```{r}
+df %>% 
+    mutate(obese_i = ifelse(test = bmi_i >= 30,
+                            yes = "obese",
+                            no = "not obese"),
+           obese_i = factor(obese_i)) %>% 
+    select(1:5, obese_i) %>%
+    head
+```
+
+## Nested ifelse statements & logical operators
+
+Nested ifelse statements can be used to create factor variables with more than two levels. The third argument of the first ifelse statment is simply replaced with a new ifelse statement that is then used to identify additional factor levels. 
+```{r}
+df <- 
+  df %>%
+  mutate(weight_chg_rec = ifelse(test = weight_i >= weight_max, 
+                                 yes = "decrease weight",
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = "increase weight",
+                                             no = "no change rec")),
+         
+# We can also use nested ifelse statements to create quantitative variables as shown below
+    
+         weight_chg_val = ifelse(test = weight_i >= weight_max,
+                                 yes = weight_max - weight_i,
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = weight_min - weight_i,
+                                             no = 0)))
+
+# Show 6 rows of the patient identifiers and new variables.
+df %>% select(1:4, weight_chg_rec, weight_chg_val)
+```
+
+------------------------------------------------------------------------
+
+# 7 DESCRIPTIVE STATISTICS
+
+------------------------------------------------------------------------
+
+Now that we know how to import data and solve basic problems that often roadblock everything else we want to do, we can begin exploring our data with descriptive statistics. Again, we can choose between base R commands, or use the more versatile and powerful collection of Tidyverse commands. The basics of both are shown below.
+
+## Base R Descriptive Statistics
 
 ```{r}
 # Simple base R commands
@@ -374,7 +604,7 @@ tapply(X = df$height,
        INDEX = df$sex, 
        FUN = mean)
 
-# sapply and lapply are helpful related looping functions for dataframes and lists (not covered)
+# sapply and lapply are helpful looping functions for dataframes and lists (not covered)
 
 # summary command works on categorical and quantitative variables
 summary(df$sex)
@@ -382,8 +612,15 @@ summary(df$height)
 tapply(X = df$sex, 
        INDEX = df$group, 
        FUN = summary)
+```
 
-# Create a summary table with tidyverse commands, group_by and summarize.These commands are usually paired and work to create a dataframe with summary statistics, grouped by one or more factor variables. Can use back ticks to break variable naming rules as shown below. I recommend limiting use of back ticks to end stage objects (graphs and tables) and for presentation purposes.
+## Tidyverse Descriptive Statistics
+
+The tidyverse commands, group_by and summarize are usually paired and work to create a new dataframe with summary statistics, grouped by one or more factor variables. Because these summary dataframes are for presentation only, we can break some of the naming rules by using back ticks as shown below. I recommend limiting use of back ticks to these end stage objects (graphs and tables) and only for presentation purposes.
+
+### Summary tables: group_by & summarize
+
+```{r}
 df %>%
   group_by(sex, group) %>%
   summarize(Count = n(),
@@ -392,9 +629,16 @@ df %>%
             `Age min` = min(age),
             `Height Mean` = mean(height), 
             `Height Standard D.` = sd(height)) %>%
-  kable() # kable command is from the knitr package
+    
+# The next two commands below are from the knitr and kable_Extra package and work together to render a more aesthetic table. The table will appear inline with your R Markdown file or under the Viewer tab of R Studio (bottom right) depending on your settings. Notice that this comment is inserted in the middle of the pipe chain, but will have no effect on command execution.
+    
+  kable() %>% 
+    kable_classic 
+```
 
+### Frequency tables for categorical data (janitor package)
 
+```{r}
 # Tabulate categorical data using base R
 table(df$sex, df$group)
 
@@ -413,11 +657,21 @@ starwars %>%
   adorn_ns() %>% # adds sample size in parentheses
   adorn_title("combined", 
               row_name = "Gender", 
-              col_name = "Eye Color") %>% # puts gender/eye_color in upper left
+              col_name = "Eye Color") %>% # adds title to upper left cell
   kable %>% kable_classic()
 ```
 
-## Missing Values: na.rm, complete.cases, is.na
+------------------------------------------------------------------------
+
+# 8 DATA WRANGLING III: Missing Values
+
+------------------------------------------------------------------------
+
+Missing values can cause commands to fail, produce anomalies in plots and cause other problems. Three common strategies for dealing with missing are described below:
+
+1.  Ignore the missing values within commands using the na.rm = TRUE argument. Note this does not change the dataframe.
+2.  Filter missing values based on a single variable using is.na(<variable name>). This can change or subset the dataframe.
+3.  Filter an entire dataframe and only retain rows with no missing values using complete.cases(<dataframe>). This can change or subset the dataframe.
 
 ```{r}
 # import a dataframe with missing values
@@ -426,105 +680,148 @@ df.mv <- read_csv("data/cardiac.csv")
 # identify variables with missing values 
 summary(df.mv)
 
-# missing values can cause problems
+# Demonstrate an error caused by missing values
 mean(df.mv$weight_t2)
 
 # ignore the missing value na.rm
 mean(df.mv$weight_t2, na.rm = TRUE)
 
-# create df with/without no missing values using complete.cases
+# create new dataframes with and without missing values using complete.cases
 df.mv.complete <- df.mv %>% filter(complete.cases(df.mv))
 df.mv.incomplete <- df.mv %>% filter(!complete.cases(df.mv))
 
-# remove the cases where one particular variable is "NA"
+# create a new dataframe with cases removed where one particular variable is "NA"
 df.mv %>% filter(!is.na(weight_t2)) %>% summary()
-
-# clear environment except df
-rm(list = setdiff(ls(), c("df")))
 ```
 
 ------------------------------------------------------------------------
 
-# R DEMO PART 3 - Data Wrangling 2 (Reshaping Data)
+# 9 DATA WRANGLING IV: Reshaping
 
 ------------------------------------------------------------------------
 
-## Reshape a single variable
+Let's again clear our environment, but now let's retain the df dataframe, which we will continue using.
 
 ```{r}
-# Subset the dataframe for weight
+# clear environment but retain the df dataframe
+rm(list = setdiff(ls(), c("df")))
+```
+
+## Repeated Measures Data: Wide & Long formats
+
+In human research we often take measurements on subjects at multiple timepoints. The most convenient way to collect this data often keeps all of the information for a subject on a single row. Variable names can be appended with some indicator of timepoints, like t0, t1, t2, etc. Strictly speaking though, this format is NOT tidy, because each column now contains information on two variables, a measure variable such as weight, and a timepoint variable with values like "initial" and "final". Appending the variable names with a timepoint level creates a data format called "**wide**" because each measured variable will be split into multiple columns, one for every level of the timepoint variable. This wide format presents limitations for data analysis because the timepoint variable does not "live" in it's own column.
+
+A common strategy for these scenarios is to collect the data in wide format and then use R to convert the data into "**long"** format.Long format reorganizes the data into a single timepoint column and a single column for each measured variable. The data will have fewer columns but more rows, and information on individual subjects will be spread across multiple rows, one for each timepoint.
+
+We call this process **reshaping** or **pivoting**. These conversions can be relatively straightforward or remarkably difficult depending on the complexity of the data and the variable naming conventions utilized. Below I present solutions for some of the more common scenarios involving repeated measures data.
+
+## Subset and reshape a single variable.
+
+First create a subset of the static subject identifiers and the one repeated measure variable of interest.
+
+```{r}
+# Subset the dataframe to include the static subject identifiers and weight
 df_weight <- 
   df %>% 
-  select(c(1:5), weight_i, weight_f) 
+  select(1:5, weight_i, weight_f) 
+```
 
-# Reshape df_weight method 1 (most intuitive)
+### Reshape Method 1
+
+Use pivot_longer with cols, names_to and values_to arguments. This method relies upon column names that include a separator like "_" between the measured variable and the timepoint indicator. Note that are "timepoint" and "weight" are names that we choose for the restructured columns.
+
+```{r}
+# Reshape Method 1
 df_weight_l <- 
   df_weight %>%
   pivot_longer(cols = 6:7,
                names_to = "timepoint",
-               values_to = "weight")
-               
+               values_to = "weight") %>%
 
 # Convert timepoint to factor and relabel
-df_weight_l$timepoint <- 
-  df_weight_l$timepoint %>%
-  fct_recode("initial" = "weight_i",
-             "final" = "weight_f")
+    
+    mutate(timepoint = factor(timepoint),
+           timepoint = fct_recode(timepoint,
+                                  "initial" = "weight_i", 
+                                  "final" = "weight_f"))
+```
 
+### Reshape Method 2 
 
-# Reshape df_weight method 2 (more useful)
+Use pivot_longer with the "names_sep =" and "names_to =" arguments, and use ".value" in the "names_to =" argument. This is less intuitive but more efficient and  powerful. Notice that the pivot_longer command also breaks up the original variable names and retains just the "weight" part for the measured variable and uses the "i" and "f" for the timepoint variable. This approach can also handle more complicated scenarios where method 1 fails, as we will see in examples that follow. Like method 1, this approach relies upon column names with a separator like "_" between the measured variable and the timepoint indicator.
+
+```{r}
+# Reshape Method 2
 df_weight_l <- 
   df_weight %>%
   pivot_longer(cols = 6:7,
                names_sep = "_",
-               names_to = c(".value", "timepoint"))
+               names_to = c(".value", "timepoint")) %>%
 
 # Convert timepoint to factor and relabel
-df_weight_l$timepoint <- 
-  df_weight_l$timepoint %>%
-  fct_recode("initial" = "i",
-             "final" = "f")
+    
+    mutate(timepoint = factor(timepoint),
+           timepoint = fct_recode(timepoint,
+                                  "initial" = "i", 
+                                  "final" = "f"))
 ```
 
-## Reshape multiple repeated measure variables
+## Reshape an entire dataframe
+
+Often we wish to explore relationships between many repeated measure variables. Reshaping the entire dataframe into a single long formatted version is usually the best way forward. This approach is really method 2 above applied to the entire dataframe. The magic of this approach lies in the ".value" term in the names_to argument. Run the code below and try to infer how this term influces the functionality of the names_to argument.
 
 ```{r}
-# Easy reshape using "_" as separator (best case scenario)
 df_l <- 
   df %>%
   pivot_longer(cols = weight_i:bmi_f,
                names_sep = "_",           
-               names_to = c(".value", "timepoint"))
+               names_to = c(".value", "timepoint")) %>%
 
-df_l$timepoint <- 
-  df_l$timepoint%>%
-  fct_recode("initial" = "i", "final" = "f")
+# Convert timepoint to factor and relabel
+    
+    mutate(timepoint = factor(timepoint),
+           timepoint = fct_recode(timepoint,
+                                  "initial" = "i", 
+                                  "final" = "f"))
 ```
 
-### ADVANCED: Reshaping tricky dataframes
+## Advanced Reshaping: Tricky dataframes
+
+Sometimes data are produced without the foresight of pivoting and other data wrangling challenges. Often the variable names don't lend themselves to easy reshaping, because they don't use "_" as a separator or they don't use any separator at all. There is always a solution though! Below are solutions to some of the trickier reshaping problems you may encounter, but many more scenarios exist. Reviewing the pivot_longer help page will often provide solutions to problematic dataframes.
+
+### Reshaping with special character separators, e.g. "." (escaping charaters)
 
 ```{r}
-# Example 1 with a special character "." as separator
+# Read in a new dataframe
 df. <- read_csv("data/Friends.Cholesterol.csv")
+
+# Reshape
 df.l <- 
   df. %>%
   pivot_longer(cols = weight.i:ldl.f,
                names_sep = "\\.", # need backslashes when "." is separator
                names_to = c(".value", "timepoint"))
+```
 
-# Example 2 with no separator - use a character index
+### Reshaping with no separator (using character indexes)
+
+```{r}
+# Read in a new dataset
 dfno <- read_csv("data/FriendsCholesterol.csv")
+
+# Reshape
 dfno.l <- 
   dfno %>%
   pivot_longer(cols = weighti:ldlf,
               names_sep = -1, # separates at the last character
                names_to = c(".value", "timepoint"))
+```
 
-# Example 3 with no separator - rename the variables using "rename" (Tidyverse)
-dfno <- read_csv("data/FriendsCholesterol.csv")
+### Reshaping with no separator (rename variables)
 
-dfno <- 
-  dfno %>%
+```{r}
+# Read in a new dataset & rename columns
+dfno <- read_csv("data/FriendsCholesterol.csv") %>%
   rename(weight_initial = weighti, 
          "hdl_initial" = hdli, 
          "ldl_initial" = ldli,
@@ -541,7 +838,7 @@ dfno.l <-
 
 ------------------------------------------------------------------------
 
-# R DEMO PART 4 - GGPLOT2
+# 10 GRAPHING WITH GGPLOT2
 
 ------------------------------------------------------------------------
 
