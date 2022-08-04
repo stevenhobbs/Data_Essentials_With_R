@@ -1,6 +1,5 @@
 ---
-title: "4. DATA WRANGLING II"
-subtitle: "Import & Recode Data"
+title: "4. IMPORT & RECODE DATA"
 output:
   pdf_document: default
   word_document: default

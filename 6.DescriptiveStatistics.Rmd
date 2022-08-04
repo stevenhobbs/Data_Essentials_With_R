@@ -1,6 +1,5 @@
 ---
-title: "6. DATA WRANGLING IV"
-subtitle: "Descriptive Statistics"
+title: "6. DESCRIPTIVE STATISTICS"
 output:
   pdf_document: default
   word_document: default
@@ -110,15 +109,18 @@ tapply(df$height, df$sex, mean)
 
 ### Other looping functions
 
-Base R includes a collection of functions that are designed to apply a function over the elements of a list, dataframe or vector. The most common are sapply and lapply. These can be very useful commands, but they require careful consideration of the data provided as input and they don't produce dataframes as output. I present examples of their use below, but we will mostly avoid these commands for now and in favor of tidyverse approaches that work more predictably with dataframes.  
+Base R includes a collection of functions that are designed to apply a function over the elements of a list, dataframe or vector. The most common are apply, sapply and lapply. These can be useful commands, but because the output is generally not a dataframe, I tend to favor tidyverse approaches that work more predictably with dataframes.  
 
 ```{r}
-# return the mean of every numeric variable in our dataframe. 
-#The output is a list, hence the l in lapply.
+# return the mean of every numeric variable in our dataframe as a vector. 
+df %>% select_if(is.numeric) %>% apply(MARGIN = 2, FUN = mean)
+
+# return the mean of every numeric variable in our dataframe as a list. 
+# note the vertical orientation of list output.
 df %>% select_if(is.numeric) %>% lapply(mean)
 
-# return the mean of every numeric variable in our dataframe. 
-# The output is simplified to a vector, hence the s in sapply.
+# return the mean of every numeric variable in our dataframe using the most 
+# simple data structure available, a vector in this case. 
 df %>% select_if(is.numeric) %>% sapply(mean)
 ```
 

@@ -1,6 +1,5 @@
 ---
-title: "7. DATA WRANGLING V"
-subtitle: "Missing Values"
+title: "7. MISSING VALUES"
 output:
   pdf_document: default
   word_document: default

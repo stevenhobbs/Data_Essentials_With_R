@@ -1,6 +1,5 @@
 ---
-title: "3. DATA WRANGLING I"
-subtitle: "Working with Data"
+title: "3. CREATE & SUBSET DATA"
 output:
   pdf_document: default
   word_document: default
