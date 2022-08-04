@@ -1,0 +1,153 @@
+---
+title: "5. DATA WRANGLING III"
+subtitle: "Mutate & ifelse"
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+pacman::p_load(knitr, tidyverse, kableExtra)
+opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
+```
+
+## Mutating the imported dataframe
+
+Mutate can be used to change existing variables in a dataframe, but can also add new variables that are mathematically related to existing variables. For both scenarios, mutate can be included in a pipe chain during the initial data import, which reduces typing because the dataframe need only be specified once. 
+
+Using mutate to change a dataframe during the initial import can also reduce errors and knitting failures. This strategy results in a single version of a dataframe that is used throughout the analysis. Consider that rarely do we write a script perfectly the first time. Often we return to earlier sections of a document to add or change code. Jumping around within a script that depends on many different versions of a dataframe allows us to change early code that relies on a dataframe produced by later code. The code may initially run fine, but will fail to knit and will throw errors for new sessions of R when we attempt to run the code sequentially. By creating one version of a dataframe during the initial import, we avoid problems related to editing and running code out of sequence.
+
+The code below imports our data, recodes the sex and group variables and then adds 6 more variables all in one execution. The code may look intimidating at first, but consider that it does not need to be written all at once, and probably shouldn't be. A less daunting approach is to start small, perhaps just with the read_csv command and then iteratively add a component, execute the code and check the output. 
+
+```{r}
+df <- 
+    read_csv(file = "data/Friends_Cholesterol.csv",
+             col_types = "cnfnfnnnnnn") %>%
+    rename(sex = gender) %>%
+    mutate(sex = fct_recode(sex, 'male' = '0', 'female' = '1'),
+           group = fct_recode(group, 'control' = '0', 'statin' = '1'),
+           
+           # while still inside the mutate command, we create add 6 more variables
+           
+           tc_i = hdl_i + ldl_i,
+           tc_f = hdl_f + ldl_f,
+           bmi_i = (weight_i/(height)^2) * 703,
+           bmi_f = (weight_f/(height)^2) * 703,
+           weight_min = weight_i * 18.5 / bmi_i,
+           weight_max = weight_i * 24.9 / bmi_i)
+```
+
+
+## Adding variables using base R extraction operator
+
+While I recommend using mutate during import for adding variables (for reasons mentioned above), the extraction operator from base R can also be used to create and add new variables to a dataframe. This approach is not "wrong", but it is tedious and opens the door to errors down the road that can be difficult to identify.
+
+```{r}
+# Create 2 new variables using base r
+df$tc_i <- df$hdl_i + df$ldl_i
+df$tc_f <- df$hdl_f + df$ldl_f
+```
+
+**Then maybe our analysis continues until we realize we need more variables...**
+
+```{r}
+df$bmi_i = (df$weight_i/(df$height)^2) * 703
+df$bmi_f = (df$weight_f/(df$height)^2) * 703
+```
+
+**More analysis and then whoops, we need 2 more variables...**
+
+```{r}
+df$weight_min = df$weight_i * 18.5 / df$bmi_i
+df$weight_max = df$weight_i * 24.9 / df$bmi_i
+```
+
+Again, changing a dataframe throughout a script will work, but you must vigilantly avoid returning to earlier sections in the script and making changes that depend on a dataframe modified by later code in the script
+
+
+## ifelse with mutate
+
+In the example below, we use an iflse statement to create an obese_i variable, and then show the first 6 rows of a selection of variables. Note that after writing and testing this code chunk, we could easily copy the arguments of mutate into the mutate command used in the import pipe chain. We coudl then remove this entire code chunk and avoid working with multiple versions of df.
+
+```{r}
+df %>% 
+    mutate(obese_i = ifelse(test = bmi_i >= 30,
+                            yes = "obese",
+                            no = "not obese"),
+           obese_i = factor(obese_i)) %>% 
+    select(1:5, obese_i) %>%
+    head
+```
+
+## Nested ifelse statements
+
+Nested ifelse statements can be used to create factor variables with more than two levels. The third argument of the first ifelse statement is simply replaced with a new ifelse statement that is then used to identify additional factor levels. 
+
+```{r}
+df <- 
+  df %>%
+  mutate(weight_chg_rec = ifelse(test = weight_i >= weight_max, 
+                                 yes = "decrease weight",
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = "increase weight",
+                                             no = "no change rec")),
+         
+# We can also use nested ifelse statements to create quantitative variables as shown below
+    
+         weight_chg_val = ifelse(test = weight_i >= weight_max,
+                                 yes = weight_max - weight_i,
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = weight_min - weight_i,
+                                             no = 0)))
+
+# Show 6 rows of the patient identifiers and new variables.
+df %>% select(1:4, weight_chg_rec, weight_chg_val)
+```
+
+## Updating the import pipe chain
+
+At this point we have made a lot of changes to our dataframe. We did so iteratively though, spread out over several code chunks. If this were part of a larger analysis, we might choose to combine all of these dataframe modifications into the import pipe chain, such that we produce a "mature" dataframe from the outset, and before additional code uses the dataframe for exploratory data analysis, inferential statistics and graphing. Such an import pipe chain might look intimidating, but recal that built it up one step at a time, testing each component before adding another. Below is how such an import pipe chain might look, including comments added for readability.
+
+```{r}
+df <- 
+    read_csv(file = "data/Friends_Cholesterol.csv",
+             col_types = "cnfnfnnnnnn") %>%
+    rename(sex = gender) %>%
+    
+    # recode the sex and group variables
+    
+    mutate(sex = fct_recode(sex, 'male' = '0', 'female' = '1'),
+           group = fct_recode(group, 'control' = '0', 'statin' = '1'),
+           
+           # add 6 more variables within mutate
+           
+           tc_i = hdl_i + ldl_i,
+           tc_f = hdl_f + ldl_f,
+           bmi_i = (weight_i/(height)^2) * 703,
+           bmi_f = (weight_f/(height)^2) * 703,
+           weight_min = weight_i * 18.5 / bmi_i,
+           weight_max = weight_i * 24.9 / bmi_i,
+           
+           # add weight change recommendation categorical variable within mutate
+           
+           weight_chg_rec = ifelse(test = weight_i >= weight_max, 
+                                 yes = "decrease weight",
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = "increase weight",
+                                             no = "no change rec")),
+           
+           # add weight change recommendation quantitative variable within mutate
+           
+           weight_chg_val = ifelse(test = weight_i >= weight_max,
+                                 yes = weight_max - weight_i,
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = weight_min - weight_i,
+                                             no = 0))
+           )
+```
+

@@ -1,0 +1,189 @@
+---
+title: "6. DATA WRANGLING IV"
+subtitle: "Descriptive Statistics"
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+pacman::p_load(knitr, tidyverse, kableExtra)
+opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
+```
+
+Now that we know how to import and mutate data to create a mature and functional dataframe, we usually want to continue by exploring our data through descriptive statistics and graphs. Again, we can choose between base R commands or use the more versatile and powerful collection of Tidyverse commands. Let's jump right in and start with importing data using the import pipe chain developed in lesson 5.
+
+```{r}
+df <- 
+    read_csv(file = "data/Friends_Cholesterol.csv",
+             col_types = "cnfnfnnnnnn") %>%
+    rename(sex = gender) %>%
+    
+    # recode the sex and group variables
+    
+    mutate(sex = fct_recode(sex, 'male' = '0', 'female' = '1'),
+           group = fct_recode(group, 'control' = '0', 'statin' = '1'),
+           
+           # add 6 more variables within mutate
+           
+           tc_i = hdl_i + ldl_i,
+           tc_f = hdl_f + ldl_f,
+           bmi_i = (weight_i/(height)^2) * 703,
+           bmi_f = (weight_f/(height)^2) * 703,
+           weight_min = weight_i * 18.5 / bmi_i,
+           weight_max = weight_i * 24.9 / bmi_i,
+           
+           # add weight change recommendation categorical variable within mutate
+           
+           weight_chg_rec = ifelse(test = weight_i >= weight_max, 
+                                 yes = "decrease weight",
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = "increase weight",
+                                             no = "no change rec")),
+           
+           # add weight change recommendation quantitative variable within mutate
+           
+           weight_chg_val = ifelse(test = weight_i >= weight_max,
+                                 yes = weight_max - weight_i,
+                                 no = ifelse(test = weight_i <= weight_min,
+                                             yes = weight_min - weight_i,
+                                             no = 0))
+           )
+```
+
+## Base R Descriptive Statistics
+
+Base R uses intuitively named commands that work with data frames and vectors. Often the command is as simple as one word with a data object passed into the command.
+
+```{r}
+# Base R commands with datafames
+mean(df$height)
+min(df$height)
+max(df$height)
+range(df$height)
+sd(df$age)
+
+# Base R commands with vectors
+mean(0:100)
+min(0:100)
+max(0:100)
+range(0:100)
+sd(0:100)
+```
+
+### The summary command
+
+Like many commands in R, the summary command uses different methods for different types of objects. For example, summary will produce different output for dataframes, categorical variables and quantitative variables as shown below. To see a list of all the types of summary methods in base r, execute <methods(summary)> in the r console. Furthermore, when we load packages such as tidyverse, those packages often add additional methods to commands like summary. Presently, base r has 32 different methods available with the summary command. Loading tidyverse adds another 15 for a total of 47 methods available with one command. An incredible feature about R is that the user doesn't have to choose form this list of methods. In the vast majority of scenarios, we just pass an object into summary, R recognizes the type of object and applies the appropriate method. 
+
+```{r}
+summary(df$age)
+summary(df$sex)
+summary(df)
+```
+
+### Frequency tables
+
+For categorical data (factor variables) we often wish to know the frequency of observations for different groups and combinations of groups. Base r provides a nice command called table that provides this information as demonstrated below.
+
+```{r}
+table(df$sex, df$group)
+```
+
+### Grouped statistics with tapply
+
+Often we wish to know descriptive statistics of quantitative variables at all levels of some other factor variable, such as sex, male and female. The base R command tapply is designed for this exact purpose and will return a descriptive statistic (or other function) of one variable for each level of a factor variable.
+
+```{r}
+tapply(X = df$height, 
+       INDEX = df$sex, 
+       FUN = mean)
+
+# Note that if we use the correct order (X variable, index variable, function), we can omit the argument names.
+tapply(df$height, df$sex, mean)
+```
+
+### Other looping functions
+
+Base R includes a collection of functions that are designed to apply a function over the elements of a list, dataframe or vector. The most common are sapply and lapply. These can be very useful commands, but they require careful consideration of the data provided as input and they don't produce dataframes as output. I present examples of their use below, but we will mostly avoid these commands for now and in favor of tidyverse approaches that work more predictably with dataframes.  
+
+```{r}
+# return the mean of every numeric variable in our dataframe. 
+#The output is a list, hence the l in lapply.
+df %>% select_if(is.numeric) %>% lapply(mean)
+
+# return the mean of every numeric variable in our dataframe. 
+# The output is simplified to a vector, hence the s in sapply.
+df %>% select_if(is.numeric) %>% sapply(mean)
+```
+
+## Tidyverse Descriptive Statistics
+
+### Summary tables: group_by & summarize
+
+With the tidyverse commands group_by and summarize we can create a new dataframe with summary statistics, and optionally grouped the output by one or more factor variables. Because these summary dataframes are for presentation only, we can also break some of the naming rules for aesthetic purposes by using back ticks as shown below. Lastly, we can use commands from the knitr and kableExtra packages that format our dataframe with publication-ready aesthetics.
+
+```{r}
+df %>%
+  group_by(sex, group) %>%
+  summarize(Count = n(),
+            `Age Mean` = mean(age),  
+            `Age Median` = median(age),
+            `Age min` = min(age),
+            `Height Mean` = mean(height), 
+            `Height SD` = sd(height)) %>%
+    
+# The next two commands below are from the knitr and kable_Extra package and work together to render a more aesthetic table. The table will appear inline with your R Markdown file or under the Viewer tab of R Studio (bottom right) depending on your settings. 
+    
+  kable() %>% 
+    kable_classic(full_width = F)
+```
+
+### Frequency tables with janitor
+
+With multiple categorical variables, we often wish to know conditional percentages in addition to observation counts. Unfortunately, the base R table command is ill-equiped for this purpose. The Janitor package provides the tabyl command (the y is not a typo) for creating frequency tables with conditional percentages, and has the added benefit of being tidyverse aligned. However, because the package is not formally part of the tidyverse suite, the package must be loaded with a separate library command, or added to the p_load command in the setup code chunk.
+
+Below we load the janitor package and create a frequency table for the base R data set called starwars. Note that because the tabyl command is tidyverse aligned, we can perform filtering steps prior to generating the table, but in a single short pipe chain.
+
+```{r}
+library(janitor) 
+
+starwars %>%
+  filter(species=='Human') %>%
+  tabyl(gender, eye_color)
+```
+
+After the initial table setup using tabyl, we can "adorn" the table with additional features linked together in a pipe chain. Lastly, because the output is still a dataframe, we can pipe into the kable() and kable_classic commands to create an aesthetically pleasing table ready for presentation or publication.
+
+```{r}
+starwars %>%
+    filter(species=='Human') %>%
+    tabyl(gender, eye_color) %>%
+    
+    # now we add count totals, row conditional percents and specify rounding
+    
+    adorn_totals(c("row", "col")) %>%
+    adorn_percentages("row") %>% 
+    adorn_pct_formatting(rounding = "half up", digits = 0) %>%
+    
+    # we can even add sample sizes in parentheses
+    
+    adorn_ns() %>% 
+    
+    # Here we add a title to the upper left corner of the table
+    adorn_title("combined", 
+                row_name = "Gender", 
+                col_name = "Eye Color") %>%
+    
+    # lastly we add aesthetics that render the table publication-worthy
+    
+    kable %>% kable_classic(full_width = FALSE)
+```
+
+
+
