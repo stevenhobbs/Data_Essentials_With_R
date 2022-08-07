@@ -1,4 +1,4 @@
-name,age,gender,height,group,weight_i,hdl_i,ldl_i,weight_f,hdl_f,ldl_f
+name,age,sex,height,group,weightinitial,hdlinitial,ldlinitial,weightfinal,hdlfinal,ldlfinal
 William,26,0,69,0,172,49,81,156,48,86
 Richard,37,0,67,0,184,54,95,165,53,93
 Joseph,45,0,66,0,191,49,106,180,46,112
