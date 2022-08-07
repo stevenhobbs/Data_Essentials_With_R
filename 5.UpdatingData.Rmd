@@ -18,13 +18,13 @@ opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 
 ## Mutating the imported dataframe
 
-Mutate can be used to change existing variables in a dataframe, but can also add new variables that are mathematically related to existing variables. For both scenarios, mutate can be included in a pipe chain during the initial data import, which reduces typing because the dataframe need only be specified once. 
+Mutate can be used to change existing variables in a dataframe and add new variables that are mathematically related to existing variables. For both scenarios, mutate can be included in a pipe chain during the initial data import, which reduces typing because the dataframe need only be specified once. 
 
-Using mutate to change a dataframe during the initial import can also reduce errors and knitting failures. This strategy results in a single version of a dataframe that is used throughout the analysis. Consider that rarely do we write a script perfectly the first time. We don't write essays, speeches or short stories perfectly the first time, so why should coding be different? Often we return to earlier sections of a document to add or change code that we didn't realize was necessary in our first pass. Jumping around within a script to write code is dangerous because we can introduce changes that mean early code chunks rely upon code chunks that appear later in the script. The code may initially run fine because the R environment stores the output of any code execution, regardless of the where chunk exists in the script. Unfortunately, the script will fail to knit and throw errors for new sessions of R when we attempt to run the code sequentially, top to bottom. 
+Using mutate to change a dataframe during the initial import can also reduce errors and knitting failures. This strategy results in a single version of a dataframe that is used throughout the analysis. Consider that rarely do we write a script perfectly the first time. We don't write essays, speeches or short stories perfectly the first time, so why should coding be different? Often we return to earlier sections of a document to add or change code that we didn't realize was necessary in our first pass. Jumping around within a script to write code is dangerous though, because we can introduce changes that mean code written near the top relies upon code that appears later in the script. The code may initially run fine because the R environment stores the output of any code execution, regardless of the where the code exists in the script. Unfortunately, the script will fail to knit and throw errors for new sessions of R when we attempt to run the code sequentially, top to bottom. 
 
-One way to minimize these problems is by creating and updating a single version of our dataframe during the initial import. If we later realize the need for additional variables, we simply return to the import pipe chain and add what is missing. A second strategy is to periodically clear the R environment using the broom icon, or by executing rm(list = ls()), and then running the code chunks sequentially.
+One way to minimize these problems is by creating and updating a single version of our dataframe during the initial import. If we later realize the need for additional variables, we simply return to the import pipe chain and add what is missing. A second strategy is to periodically clear the R environment using the broom icon, or by executing rm(list = ls()), and then running the code chunks sequentially to flush out sequence errors.
 
-The code below imports our data, recodes the sex and group variables and then adds 6 more variables all in one execution. The code looks intimidating at first, but consider that it does not need to be written all at once, and probably shouldn't be. An easier and safer approach is to start with just the read_csv command and only the file path. After the data are imported, view the variable types and then add the col_types argument if necessary to make corrections. After the updated code produces the desired result, add the rename(gender) component with a pipe operator, and again execute the code and verify the results. Continue the cycle of adding components, executing and verifying the results until the dataframe reaches a "mature" state and is ready for analysis. If you later discover the need to create more variables, simply return to the import pipe chain and make the addition.
+The code below imports our data, recodes the sex and group variables and then adds 6 more variables all in one execution. The code looks intimidating at first, but consider that it does not need to be written all at once, and probably shouldn't be. An easier and safer approach is to start with just the read_csv command and only the file path to import data. After the data are imported, view the variable types and then add the col_types argument to make necessary corrections. After the updated code produces the desired result, add the rename(gender) component with a pipe operator, and again execute the code and verify the results. Continue the cycle of adding components, executing and verifying the results until the dataframe reaches a "mature" state and is ready for analysis. If you later discover the need to create more variables, simply return to the import pipe chain and make the addition.
 
 ```{r}
 df <- 
@@ -70,11 +70,11 @@ df$weight_min = df$weight_i * 18.5 / df$bmi_i
 df$weight_max = df$weight_i * 24.9 / df$bmi_i
 ```
 
-Again, changing a dataframe throughout a script will work, but you must vigilantly avoid returning to earlier sections in the script and making changes that depend on a dataframe modified by later code in the script
+Again, changing a dataframe throughout a script will work, but you must vigilantly avoid returning to earlier sections in the script and making changes that depend on a dataframe modified by code introduced later in the script
 
 ## ifelse with mutate
 
-In the example below, we use an iflse statement to create an obese_i variable, and then show the first 6 rows of a selection of variables. Note that after writing and testing this code chunk, we could easily copy the arguments of mutate into the mutate command used in the import pipe chain. We could then remove this entire code chunk and avoid working with multiple versions of df.
+In the example below, I use an iflse statement to create an obese_i variable, and then show the first 6 rows of a selection of variables. Note that after writing and testing this code chunk, we could  copy the arguments of mutate into the mutate command used in the import pipe chain. We could then remove this entire code chunk and avoid working with multiple versions of df.
 
 ```{r}
 df %>% 
@@ -113,7 +113,7 @@ df %>% select(1:4, weight_chg_rec, weight_chg_val)
 
 ## Updating the import pipe chain
 
-At this point we have made a lot of changes to our dataframe. We did so iteratively though, spread out over several code chunks. If this were part of a larger analysis, we might choose to combine all of these dataframe modifications into the import pipe chain, such that we produce a "mature" dataframe from the outset, and before additional code uses the dataframe for exploratory data analysis, inferential statistics and graphing. Such an import pipe chain might look intimidating, but recal that built it up one step at a time, testing each component before adding another. Below is how such an import pipe chain might look, including comments added for readability.
+At this point we have made a lot of changes to our dataframe. We did so iteratively though, spread out over several code chunks. If this were part of a larger analysis, we might choose to combine all of these dataframe modifications into the import pipe chain, such that we produce a "mature" dataframe from the outset, and before additional code uses the dataframe for exploratory data analysis, inferential statistics and graphing. Such an import pipe chain might look intimidating, but recall that we built it up one step at a time, testing each component before adding another. Below is how such an import pipe chain might look, with comments added for readability.
 
 ```{r}
 df <- 
@@ -135,7 +135,7 @@ df <-
            weight_min = weight_i * 18.5 / bmi_i,
            weight_max = weight_i * 24.9 / bmi_i,
            
-           # add weight change recommendation categorical variable within mutate
+           # add categorical weight change recommendation variable within mutate
            
            weight_chg_rec = ifelse(test = weight_i >= weight_max, 
                                  yes = "decrease weight",
@@ -143,7 +143,7 @@ df <-
                                              yes = "increase weight",
                                              no = "no change rec")),
            
-           # add weight change recommendation quantitative variable within mutate
+           # add quantitative weight change recommendation variable within mutate
            
            weight_chg_val = ifelse(test = weight_i >= weight_max,
                                  yes = weight_max - weight_i,
@@ -154,4 +154,18 @@ df <-
 ```
 
 
-## Adding Rows & Columns to Dataframes
+## Adding rows & columns to dataframes
+
+in progress 
+
+### rbind
+
+in progress
+
+### cbind
+
+in progress
+
+## Merging dataframes
+
+in progress

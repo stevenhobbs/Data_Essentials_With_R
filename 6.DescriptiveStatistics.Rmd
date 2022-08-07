@@ -10,13 +10,12 @@ editor_options:
   chunk_output_type: console
 ---
 
-
 ```{r setup, include=FALSE}
 pacman::p_load(knitr, tidyverse, kableExtra)
 opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 ```
 
-Now that we know how to import and mutate data to create a mature and functional dataframe, we usually want to continue by exploring our data through descriptive statistics and graphs. Again, we can choose between base R commands or use the more versatile and powerful collection of Tidyverse commands. Let's jump right in and start with importing data using the import pipe chain developed in lesson 5.
+Now that we know how to import and mutate data to create a mature and functional dataframe, we usually want to continue by exploring our data through descriptive statistics and graphs. Again, we can choose between base R commands or the more versatile and powerful collection of Tidyverse commands. Let's jump right in and start with importing data using the import pipe chain developed in lesson 5.
 
 ```{r}
 df <- 
@@ -38,7 +37,7 @@ df <-
            weight_min = weight_i * 18.5 / bmi_i,
            weight_max = weight_i * 24.9 / bmi_i,
            
-           # add weight change recommendation categorical variable within mutate
+           # add categorical weight change recommendation variable within mutate
            
            weight_chg_rec = ifelse(test = weight_i >= weight_max, 
                                  yes = "decrease weight",
@@ -46,7 +45,7 @@ df <-
                                              yes = "increase weight",
                                              no = "no change rec")),
            
-           # add weight change recommendation quantitative variable within mutate
+           # add quantitative weight change recommendation variable within mutate
            
            weight_chg_val = ifelse(test = weight_i >= weight_max,
                                  yes = weight_max - weight_i,
@@ -58,7 +57,7 @@ df <-
 
 ## Base R Descriptive Statistics
 
-Base R uses intuitively named commands that work with data frames and vectors. Often the command is as simple as one word with a data object passed into the command.
+Base R uses intuitively named descriptive statistics commands that work with data frames and vectors. Often the command is as simple as one word with a data object passed into the command.
 
 ```{r}
 # Base R commands with datafames
@@ -78,7 +77,7 @@ sd(0:100)
 
 ### The summary command
 
-Like many commands in R, the summary command uses different methods for different types of objects. For example, summary will produce different output for dataframes, categorical variables and quantitative variables as shown below. To see a list of all the types of summary methods in base r, execute <methods(summary)> in the r console. Furthermore, when we load packages such as tidyverse, those packages often add additional methods to commands like summary. Presently, base r has 32 different methods available with the summary command. Loading tidyverse adds another 15 for a total of 47 methods available with one command. An incredible feature about R is that the user doesn't have to choose form this list of methods. In the vast majority of scenarios, we just pass an object into summary, R recognizes the type of object and applies the appropriate method. 
+Like many commands in R, the summary command uses different methods for different types of objects. For example, summary will produce different output for dataframes, categorical variables and quantitative variables as shown below. To see a list of all the types of summary methods in base r, execute methods(summary) in the r console. Furthermore, when we load packages such as tidyverse, those packages often add additional methods to commands like summary. Presently, base r has 32 different methods available with the summary command. Loading tidyverse adds another 15 for a total of 47 methods available with one command. An incredible feature about R is that the user doesn't have to choose form this list of methods. In the vast majority of scenarios, we just pass an object into summary, R recognizes the type of object and applies the appropriate method. 
 
 ```{r}
 summary(df$age)
@@ -88,7 +87,7 @@ summary(df)
 
 ### Frequency tables
 
-For categorical data (factor variables) we often wish to know the frequency of observations for different groups and combinations of groups. Base r provides a nice command called table that provides this information as demonstrated below.
+For categorical data (factor variables) we often wish to know the frequency of observations for different groups and combinations of groups. Base r provides the table command that provides this information as demonstrated below.
 
 ```{r}
 table(df$sex, df$group)
@@ -103,16 +102,19 @@ tapply(X = df$height,
        INDEX = df$sex, 
        FUN = mean)
 
-# Note that if we use the correct order (X variable, index variable, function), we can omit the argument names.
+# Note that if we use the correct order (X variable, index variable, function), we can omit 
+# the argument names.
 tapply(df$height, df$sex, mean)
 ```
 
 ### Other looping functions
 
-Base R includes a collection of functions that are designed to apply a function over the elements of a list, dataframe or vector. The most common are apply, sapply and lapply. These can be useful commands, but because the output is generally not a dataframe, I tend to favor tidyverse approaches that work more predictably with dataframes.  
+Base R includes a collection of functions that are designed to apply a function over the elements of a list, dataframe or vector. The most common are apply, sapply and lapply. These can be useful commands, but because the output is generally not a dataframe, I tend to favor tidyverse approaches that work more predictably with dataframes.
 
 ```{r}
 # return the mean of every numeric variable in our dataframe as a vector. 
+# Here I use select_if, a variation on the select command that allows us to
+# select variables based on variable types.
 df %>% select_if(is.numeric) %>% apply(MARGIN = 2, FUN = mean)
 
 # return the mean of every numeric variable in our dataframe as a list. 
@@ -140,7 +142,10 @@ df %>%
             `Height Mean` = mean(height), 
             `Height SD` = sd(height)) %>%
     
-# The next two commands below are from the knitr and kable_Extra package and work together to render a more aesthetic table. The table will appear inline with your R Markdown file or under the Viewer tab of R Studio (bottom right) depending on your settings. 
+# The next two commands below are from the knitr and kable_Extra package and work 
+# together to render a more aesthetic table. The table will appear inline with 
+# your R Markdown file or under the Viewer tab of R Studio (bottom right) 
+# depending on your settings. 
     
   kable() %>% 
     kable_classic(full_width = F)
@@ -186,6 +191,3 @@ starwars %>%
     
     kable %>% kable_classic(full_width = FALSE)
 ```
-
-
-

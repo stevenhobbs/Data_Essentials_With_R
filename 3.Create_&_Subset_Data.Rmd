@@ -6,6 +6,7 @@ output:
   html_document:
     df_print: paged
   html_notebook: default
+urlcolor: blue
 editor_options:
   chunk_output_type: console
 ---
@@ -34,9 +35,9 @@ df <- data.frame(age, name, whoknows)
 ```
 
 
-## The extraction operator "$"
+## The extraction operator $
 
-The base R extraction operator is the dollar sign, \$. This command pulls a single column out of a dataframe as a vector. The extracted column is no longer dataframe, but is instead a vector. More generally, the \$ pulls smaller objects out of larger objects. Note that when writing this character in markdown space I sometimes use put a backslash before the character. The backslash is an escape character and is used because the dollar sign has a different meaning in Markdown language that we sometimes wish to avoid.
+The base R extraction operator is the dollar sign, \$. This command pulls a single column out of a dataframe as a vector. The extracted column is no longer a dataframe, but is instead a vector. More generally, the \$ pulls smaller objects out of larger objects, such as a dataframe out of a list of output. Note that when writing this character in markdown space I sometimes put a backslash before the character. The backslash is an escape character and is used because the dollar sign can also be used to format text with italics in Markdown language, and here we wish to "escape" this functionality.
 
 Let's extract a variable from the df dataframe and then show summary information for the extracted variable.
 
@@ -54,12 +55,14 @@ Metadata is information about data. Some metadata is stored as attributes. Every
 attributes(df)
 
 # names() is a command that adds naming metadata.
-names(age) <- name 
+names(age) <- c('greg', 'sally', 'sean', 'carlos', 'becka', 'doug') 
 
-# Now the values are named. This is truly unnecessary because we have a separate column for names.
+# Now the values of age are named. This is unnecessary and for demonstration 
+# purposes only, because we already have a separate column for names.
 attributes(age)  
 
-# Don't confuse data with metadata. Even though age now has a name attribute, the age variable is still an integer variable. The data are numeric.
+# Don't confuse data with metadata. Even though age now has a name attribute, the 
+# age variable is still an integer variable.
 2*age 
 ```
 
@@ -106,7 +109,7 @@ df$treat <- ifelse(test = df$age > 23,
 
 ## Subsetting with Tidyverse commands (select and filter)
 
-The Tidyverse package consists of several packages that form an ecosystem of commands that follow the same general structure and which are mostly optimized to work with dataframes. Many of the most popular commands for manipulating and summarizing dataframes come from the dplyr package within the tidyverse package. The select and filter commands shown below are examples, but many more are available. The [dplyr vignette](https://dplyr.tidyverse.org/) provides explanations and examples of how to use these commands, as well as a downloadable [Cheat Sheet](https://github.com/rstudio/cheatsheets/raw/main/data-transformation.pdf).
+The Tidyverse package consists of several packages that form an ecosystem of commands that follow the same general structure. Many of the most popular commands for manipulating and summarizing dataframes come from the dplyr package within tidyverse. The select and filter commands shown below are examples, but many more are available. The [dplyr vignette](https://dplyr.tidyverse.org/) provides explanations and examples of how to use these commands, as well as a downloadable [Cheat Sheet](https://github.com/rstudio/cheatsheets/raw/main/data-transformation.pdf).
 
 View each dataframe below after running the code.
 
@@ -129,7 +132,7 @@ d4 <-
 
 ### Single Brackets [ ]
 
-Be familiar with the [ ] and [[ ]] methods. These are quick and useful and you'll see them searching the internet of help vignettes for coding solutions. However, tidyverse commands are generally easier to read and understand. Also, the select() command always returns a dataframe, which is the data structure most used in data analysis and other tidyverse commands. The objects extracted by brackets may not be of the same type as the parent object and may not work with other tidyverse commands. To demonstrate the variety of bracket uses, run each code below one at a time and track the "temp" file in your environment. Note when temp is created as a dataframe versus a vector (AKA value).
+While I will mostly tidyverse commands for subsetting, students should also be familiar with the [ ] and [[ ]] methods. These are quick and useful and you'll come across them reviewing help vignettes and searching forums for coding solutions. Tidyverse commands are generally easier to read and understand. Also, the select() command always returns a dataframe, which is the data structure most used in data analysis and other tidyverse commands. The objects extracted by brackets may not be of the same type as the parent object and may not work with other tidyverse commands. To demonstrate the variety of bracket uses, run each code below one at a time and track the "temp" file in your environment. Note when temp is created as a dataframe versus a vector (AKA value).
 
 ```{r}
 temp <- df[c('name', 'whoknows')] 

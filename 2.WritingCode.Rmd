@@ -19,29 +19,29 @@ opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 
 Single lines of code can be written in the console window (bottom left). However, this code can not be saved or edited after execution. The console window is best utilized for experimenting with short lines of code, accessing help files, installing packages, and other tasks that do not need to be included in a master code document. 
 
-**practice** To see how the console can be used to access help files, type <?head> (without < and >) in the console and hit return. You should see a help document for the head command appear in the bottom right panel of RStudio.
+**PRACTICE:** To see how the console can be used to access help files, type ?head in the console and hit return. You should see a help document for the head command appear in the bottom right panel of RStudio.
 
 ## Writing code inline with text.
 
-R code *can* be mixed in with text using back ticks as demonstrated below. The code will be replaced by the output in the knitted document. To see the output of inline text in the R Markdown file (before knitting), place the cursor inside the tick marks below and press "command + enter".
+R code *can* be mixed in with Markdown text using back ticks as demonstrated below. The code will be replaced by the output in the knitted document. To see the output of inline text in the R Markdown file (before knitting), place the cursor inside the tick marks below and press "command + enter".
 
-*practice* Place the cursor inside `r 2+2` and press <command/control + enter>
+**PRACTICE** In the .Rmd file, place the cursor inside `r 2+2` and press "command/control + enter. In the knitted document you should see a 4. 
 
 Inline code can be useful for referencing values and output saved in the R environment, but is best avoided for everything else.
 
 ## Writing code inside code chunks
 
-Anytime you write multiple lines of code that work together, placing the code inside of code chunks is more useful than writing inline code. The commands inside the code chunk can be executed individually using the shortcut keys <command/control + enter> or collectively using <shift + command/control + enter>
+Anytime you write multiple lines of code that work together, placing the code inside of code chunks is more useful than writing inline code. The commands inside the code chunk can be executed individually using the shortcut keys "command/control + enter" or collectively using "shift + command/control + enter"
 
 ## Executing code & code chunks
 
-Below is a new code chunk that prints a message, creates data, a dataframe, and a scatterplot, and creates a histogram of horse power from the built in dataset called mtcars. Here are several ways to execute the commands in code chunks:
+Below is a new code chunk that prints a message, creates data, a dataframe, and a scatterplot, and creates a histogram of horse power from the built in R dataset called mtcars. Here are several ways to execute the commands in code chunks:
 
 1. Execute the entire code chunk. Click the green arrow at the top right of the code chunk.
-2. Execute the entire code chunk. With the cursor on any line of code, press <shift + Command + Enter>.
-3. Execute a single line. With the cursor anywhere on a line of code, press <cmmand/control + Enter>. 
+2. Execute the entire code chunk. With the cursor on any line of code, press "shift + Command + Enter".
+3. Execute a single line. With the cursor anywhere on a line of code, press "command/control + Enter". 
 4. Execute all code chunks above a code chunk. Click the icon to the left of the green arrow at the right of a code chunk.
-5. Execute all code chunks. Select this option from the "Run" pull down menu at the top right of this panel.
+5. Execute all code chunks. Select this option from the "Run" pull down menu.
 
 Experiment with each of the above approaches to run code in the chunk below.
 
@@ -54,20 +54,20 @@ plot(x,y)
 hist(mtcars$hp)
 ```
 
-Any visible output will appear in the console window and possibly below the chunk depending on your settings. Also check the Environment panel (upper right) for objects that were created by executing the code chunk. The assignment operator, "<-", is used to create objects such as variables and dataframes.
+In RStudio, any visible output will appear in the console window and possibly below the code chunk depending on your settings. Also check the Environment panel (upper right) for objects that were created by executing the code chunk. The assignment operator, "<-", is used to create objects such as variables and dataframes. The visible output from code chunks will also appear in the knitted document. 
 
 ## Comments vs Headers
 
 Hashtags inside of code chunks function very differently than when used in Markdown space. Inside of code chunks, hashtags tell R to simply ignore the text that follows. These hashtags create comments within code chunks that are used to provide short explanatory messages as shown below:
 
 ```{r}
-# hashtags inside of code chunks create comments that are not "executed".
+# Hashtags inside of code chunks create comments that are not "executed".
 # The code below creates a boring graph using base R
 plot(x = df$x, y = df$y)
 ```
 
 
-**Practice** Use shortcut keys to execute individual commands in the code chunk below (hidden from html file) and avoid without moving the cursor between executions. Pause after each execution to consider what each command accomplished.
+**PRACTICE** Use shortcut keys to execute individual commands in the code chunk below (hidden from knitted document) and avoid moving the cursor between executions. Pause after each execution to consider what each command accomplished.
 
 ```{r, include = FALSE}
 # Explore the mtcars dataset that comes with R
@@ -80,7 +80,7 @@ rownames(mtcars)
 
 ## Commands and arguments
 
-In general, commands perform actions on objects that are passed into commands as arguments. The actions of commands can be modified by additional arguments, some of which are optional. Everything passed into the parentheses of a command is an argument, regardless of what that argument is or does. Arguments are separated by commas. The data command below has one argument, while the head command has two.  
+In general, commands perform actions on objects that are passed as arguments into those commands. The actions of commands can be modified by additional arguments, some of which are optional. Everything passed into the parentheses of a command is an argument, regardless of what that argument is or does. Arguments are separated by commas. The data command below has one argument, while the head command has two.  
 
 ```{r}
 data(mtcars)
@@ -89,7 +89,7 @@ head(mtcars, 4)
 
 ### Argument names
 
-The plot command below contains 4 arguments that identify the data to be plotted on the x and y axis, and the optional arguments that customize the x and y axis labels. All arguments have names (e.g. x =, y =, xlab = and ylab = below), but these names can be avoided if the arguments are presented in the exact order that r expects. However, I recommend using argument names, especially at first, to make your code more readable and to avoid errors.
+The plot command below contains 4 arguments that identify the data to be plotted on the x and y axis, and the optional arguments that customize the x and y axis labels. Arguments may have names (e.g. x =, y =, xlab = and ylab = below), but these names can be avoided if the arguments are presented in the exact order that r expects. However, I recommend using argument names, especially at first, to make your code more readable and intuitive.
 
 ```{r}
 plot(x = mtcars$wt, y = mtcars$mpg, 
@@ -102,7 +102,7 @@ plot(mtcars$wt, mtcars$mpg)
 
 ## Piping commands with "%>%"
 
-The Tidyverse pipe operator, %>%, allows code to follow a natural reading pattern, which is left to right and top to bottom. The %>% operator takes the output of code to the left of the operator and passes that into the first argument of a command on the right. This is called piping and is a feature of many programming languages. Below is an example of the pipe operator in use. The line of code would read something like "start with mtcars, select the column called hp, summarize the values.
+The Tidyverse pipe operator, %>%, allows code to follow a natural reading pattern, which is left to right and top to bottom. The %>% operator takes the output of code to the left of the operator and passes that into the first argument of a command on the right. This is called piping and is a feature of many programming languages. Below is an example of the pipe operator in use. The line of code would read something like "start with mtcars, select the column called hp, lastly summarize the values".
 
 ```{r}
 mtcars %>% select(hp) %>% summary
