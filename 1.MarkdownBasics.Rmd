@@ -6,44 +6,49 @@ output:
   html_document:
     df_print: paged
   html_notebook: default
+urlcolor: blue
 editor_options:
   chunk_output_type: console
 ---
 
 # Markdown languages.
 
-Markdown is a lightweight language for creating formatted documents. Instead of clicking on icons and selecting formatting features from pull down menus, the desired formatting is typed into the document and subtly mixed in with the content. Formatting options like bold, italics and underline are specified with special characters that are mixed in with the regular text. When the document is "knitted" (AKA processed, parsed, rendered), the formatting commands are executed and the special characters and formatting commands are hidden from view. The knitted document typically takes the form of .html, .pdf or .docx and is designed to be more readable and aesthetically pleasing than the Markdown document itself.
+Markdown is a lightweight computer language for creating formatted documents. Instead of clicking on icons and selecting features from pull down menus, the desired formatting is typed into the document and integrated with content. Formatting options like bold, italics and underline are specified with special characters that are typed before and after regular text. When the document is "knitted" (AKA processed, parsed, rendered), the formatting commands are executed and then hidden from view. The knitted document typically takes the form of .html, .pdf or .docx and is designed to be more polished and readable than the Markdown document itself.
 
-R Markdown is one of many variations (more like a dialect) on the Markdown language. R Markdown files allow a user to write Markdown text (like what you are reading right now) and also use any of several programming languages (R, Python, SQL, etc) to analyze data all in the same document. The Markdown text is generally used to explain and interpret the analysis, while the programming languages are used to manipulate and analyze data. R Markdown files include a third language called YAML that determines some of the final knitted document characteristics, such as whether it will be a webpage (.html) a flat file (.pdf) or a MS Word document (.docx). R Markdown files are pre-structured into three parts:\
+R Markdown is one of many variations (more like a dialect) on the Markdown language. R Markdown files allow a user to write Markdown text (like what you are reading right now) and also use any of several programming languages (R, Python, SQL, etc) to analyze data all in the same document. The Markdown text is generally used to explain and interpret the analysis, while the programming languages are used to manipulate and analyze data. R Markdown files include a third language called YAML that determines some of the final knitted document characteristics, such as whether it will be a webpage (.html) a flat file (.pdf) or a MS Word document (.docx).\ 
 
 # R Markdown files - 3 Parts
 
+R Markdown files are pre-structured into three parts:\
+
 **1) A YAML header** 
-Located at the top of the file and between two sets of three dashes. The YAML header has metadata that determines how the Markdown document will be rendered or "knitted" into a polished final document. Scroll to the top of this .Rmd file to see the YAML header with it's characteristic "key:value" organization. You will not need to learn YAML or make changes to the YAML header.
+Located at the top of the file and between two sets of three dashes. The YAML header has metadata that determines how the Markdown document will be rendered or "knitted" into a polished final document. If you are viewing the .Rmd file, scroll to the top to see the YAML header with it's characteristic "key: value" organization. Because RStudio structures the YAML header when you open a new .Rmd file, you will not need to learn YAML or make changes to the YAML header.
 
 **2) Markdown space (white background)**
-New R Markdown files contain pre-formatted text in markdown space that helps to explain the features of the markdown file. The text you are reading now is written in markdown space. As you can see, the markdown language allows you to type in mostly plain English.
+New R Markdown files contain pre-formatted text in markdown space that helps to explain the features of the markdown file. The text you are reading now is written in markdown space. As you can see, the markdown language allows you to write in mostly plain English.
 
 **3) Code chunks (gray background)**
 Code chunks interrupt the markdown space and are areas where you can write code using R, Python, SQL and other languages. This is where the business of statistics happens! New R Markdown files come pre-formatted with several code chunks that help demonstrate the R language and functionality of an R Markdown file.
 
-One benefit of an R Markdown file is the ability to write and format text and analyze data all in one document. Many R textbooks are written entirely with R Markdown files, because of the ability to display code, tables, graphs and other types of code output, along with formatted explanations of the code. *R Markdown: The Definitive Guide* is one of many text books written entirely using R Markdown files. The source code for the book can be downloaded from this [github link](https://github.com/rstudio/rmarkdown-book).
+Many R textbooks (and the guide you are reading now) are written entirely with R Markdown files, because of the ability to display code, tables, graphs and other types of code output, along with formatted explanations of the code. *R Markdown: The Definitive Guide* is one of many text books written entirely using R Markdown files. The source code for the book can be downloaded from this [github link](https://github.com/rstudio/rmarkdown-book).
 
 ## Code chunks
 
 ### The setup code chunk
 
-The first code chunk is the r setup code chunk shown below:
+The first code chunk is the r setup code chunk shown in figure 1 below:
+
+![setup code chunk](/Users/stevenhobbs/Desktop/Data_Essentials_With_R-update-Jul-31-22/data/Setup_Code_Chunk.jpg)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The "setup" statement inside curly brackets relates to options that we will not utilize in this course. Everything else about this code chunk influences the appearance of our document after it is "knitted", meaning after it is converted into something more viewer friendly, such as MS Word document, PDF or an html file. Unfortunately, this first code chunk is somewhat tedious to explain, but here it goes...
+The "setup" statement inside curly brackets relates to options that we will not utilize in this course and is only present in the first code chunk. Everything else about this code chunk influences the appearance of our document after it is knitted. Unfortunately, this first code chunk is somewhat tedious to explain, but here it goes...
 
-All code chunks begin and end with three back tick marks. These back ticks tell RStudio to stop reading R Markdown text and start reading in the programming language that is specified inside the curly brackets, in our case "r".
+All code chunks begin and end with three back tick marks. These back ticks tell RStudio to stop reading R Markdown text and start reading in the programming language that is specified inside the curly brackets, "r" in this case. 
 
-The "include=FALSE" statement means that the code inside this particular code chunk will not appear in our knitted document. When you eventually knit this document, the code above will not be visible. In fact, now is a great time to click the "Knit" button above this panel. Wait several seconds to a minute for the file to be rendered. Periodically compare the knitted document to this one as you continue reading through this Markdown file.
+The "include=FALSE" statement means that the code inside this particular code chunk will not appear in the knitted document. In fact, if you are reading this material in the .Rmd file, now is a great time to click the "Knit" button above this panel. You may need to wait several seconds for the file to be rendered. Once the knit is completed, periodically compare the knitted document to the .Rmd file one as you continue working through the material.
 
 The single command in the middle of the code chunk will establish a default behavior for all code chunks that follow. In this case that behavior, is to show R code in the knitted document. Sometimes we change this argument to "FALSE" when we want our audience to ignore the code and only see the output and our explanations written in markdown. The double colon operator, "::", is a special command for reaching into software packages and grabbing commands. In this case, the :: is used to reach into the software package called knitr and grab the command called "opts_chunk".
 
@@ -51,19 +56,19 @@ The single command in the middle of the code chunk will establish a default beha
 
 Code chunks are used to organize code into sections analogous to paragraphs of an essay. When we wish to add one or more lines of code that work together, we set our cursor to the desired location in markdown space and then add a code chunk by one of several methods shown below:
 
-1. Key shortcut (quickest): "option" + "shift" + "i".
-2. Code chunk pull down menu: select "R" from the green and white C+ icon above and right.
+1. Key shortcut (quickest): Simultaneously press "option + shift" + i".
+2. Code chunk pull down menu: select "R" from the green and white +C icon.
 3. Code menu, select "Insert Chunk" from the Code menu at the top left of your screen.
 
-**Practice** Add a new code chunk below this line using the key short cut method. Type <print("Hello World")> (but without < and >) on the blank line of code. With the cursor anywhere on this line of code press "command/control" + "Enter"
+**Practice** Add a new code chunk below this line using the key short cut method. Type <print("Hello World")>, ( but without < and > ) on the blank line of code. With the cursor anywhere on this line of code press "command/control" + "Enter"
 
 # R Packages
 
-Software packages like knitr provide commands that extend the functionality of R. These packages are created and donated by R users all over the world. R packages must be installed once on your personal computer, just like for any other software, and then loaded within a R Markdown document before they can be used. Newer versions of R Studio are capable of detecting packages that are needed but not installed on your computer. Check above this panel in R Studio for any messages to this affect. Click "Install" for any packages that R recognizes are missing.
+Software packages like knitr provide commands that extend the functionality of R. These packages are created and donated by R users all over the world. R packages must be installed once on your personal computer, just like any other software, and then loaded within an R Markdown document before they can be used. Newer versions of R Studio are capable of detecting packages that are needed but not installed on your computer. If you are reading this in R Studio, check above the code panel in R Studio for a message related to uninstalled packages and click "Install" if the option exists.
 
-The knitr package ("knit r") provides commands that help customize the appearance of a knitted document. In the setup code chunk, we used the opts_chunk command from knitr to set the default echo parameter to TRUE. This means that the code we write inside of subsequent code chunks will also appear in our knitted document. However, the "include = FALSE" command inside the curly brackets overrides the default for any particular code chunk, meaning we will not see setup code chunk echoed in the knitted document.
+The knitr package ("knit r") provides commands that help customize the appearance of a knitted document. In the setup code chunk, we used the opts_chunk command from knitr to set the default echo parameter to TRUE. This means that the code we write inside of subsequent code chunks will also appear in our knitted document. However, the "include = FALSE" command inside the curly brackets overrides the default for any particular code chunk, meaning we will not see setup code chunk echoed in the knitted document and we can hide other code chunks if we wish.
 
-The knitr package (like all packages) has many other commands as well. Sometimes the commands inside of packages have conflicts with base R commands or other packages. As mentioned above, the setup file in new R Markdown file uses "::" to avoid these potential conflicts by pulling the opts_chunk command out of the knitr package, without actually loading the entire knitr package.
+The knitr package (like all packages) has many other commands as well. Sometimes the commands inside of packages have conflicts with base R commands or other packages. The setup chunk in new R Markdown file uses "::" to avoid these potential conflicts by pulling the opts_chunk command out of the knitr package, without actually loading the entire knitr package.
 
 As it turns out, the knitr package has many useful commands and few (if any) conflicts for basic statistical analyses. As such, I recommend changing the setup code chunk to load the knitr package and then use the opts_chunk command on a separate line. Let's recreate this code chunk below and eliminate "include = FALSE" from the curly braces, so that we see this code chunk in the knitted document:
 
@@ -76,7 +81,7 @@ Note that this code chunk is missing "setup" in the curly braces. Only one code 
 
 ## Loading multiple packages (library commands)
 
-If you know in advance that you will use many packages in your analysis, you can add multiple library commands to this code chunk. All of the packages below must have already been installed at some point before they can be loaded.
+Often we know in advance that you we will use certain packages in our analysis and choose to load those packages in the setup code chunk. All of the packages loaded below must have already been installed at some point before the library commands can run without error.
 
 ```{r}
 library(knitr)
@@ -85,7 +90,7 @@ library(tidyverse)
 library(kableExtra)
 ```
 
-Note that when a package is first loaded, R will display messages indicating if the load was successful, if conflicts exist and if other commands are masked by commands in the new package.
+Notice from the output, that when a package is first loaded R will display messages indicating if the load was successful, if conflicts exist and if other commands are masked by commands in the new package.
 
 ## Loading multiple packages (p_load)
 
@@ -104,7 +109,7 @@ You can write *mostly* plan text in an R Markdown document. However, there are s
 **bold**\
 ***bold and italics***
 
-Note that you will not see the formatting applied until the the document is knitted, or unless you are using the visual editor, which you should avoid for now. Markdown has a few quirky formatting features. Leaving a blank line on a Markdown document will also leave a blank line in a knitted document. However, without that blank line, text on sequential lines will run together, unless either two spaces or a backslash are left at the end of a line. The three lines of bold text below have neither two spaces nor a backslash at the end of the line and will run together when the document is knitted.
+Note that you will not see the formatting applied until the the document is knitted, or unless you are using the RStudio visual editor, which you should avoid for now. Markdown has a few quirky formatting features. Leaving a blank line on a Markdown document will also leave a blank line in a knitted document. However, without that blank line, text on sequential lines will run together, unless either two spaces or a backslash are left at the end of a line. The three lines of bold text below have neither two spaces nor a backslash at the end of the line and will run together when the document is knitted.
 
 **this text will run together** 
 **with this text on one line** 
@@ -120,7 +125,7 @@ Hashtags followed by a space create collapsible sections of the R Markdown file.
 
 #### Feature 2 - R Studio outline
 
-You can imagine that when an R Markdown file grows to hundreds or thousands of lines, getting lost in these documents happens easily. R Studio provides a handy outline feature based on hashtag headers in Markdown space. Click on the Outline button in the upper right of this panel and expand the window that opens. Every text line you see corresponds to a place in the Markdown document where a hashtag header has been created. Clicking within this outline takes you to that part of the document. Click around a bit, but then come back to this section and close the outline if you need monitor space.
+You can imagine that when an R Markdown file grows to hundreds of lines, getting lost in these documents happens easily. R Studio provides a handy outline feature based on hashtag headers in Markdown space. Click on the Outline button in the upper right of this panel and expand the window that opens. Every text line you see corresponds to a place in the Markdown document where a hashtag header has been created. Clicking within this outline takes you to that part of the document. Click around a bit, but then come back to this section and close the outline if you need monitor space.
 
 #### Feature 3 - Knitted document headers
 
@@ -140,6 +145,6 @@ Download the [R Markdown Cheat Sheet] (https://www.rstudio.com/wp-content/upload
 
 ## Knitting
 
-Before you can knit an R Markdown file, you will need to have installed all the packages used in library commands (knitr, tidyverse, pacman, magrittr, kableExtra). Packages ONLY need to be installed once (like any other software) on a computer. Use the "Packages" menu in the bottom right panel to install packages, or use install.packages("package_name") in the R console. Do NOT include install.package commands inside an R Markdown chunk. This is useless and time consuming. You will need to have an internet connection to reach a CRAN mirror where these packages are hosted and made available for installation.
+Before you can knit an R Markdown file, you will need to have installed all the packages used in library commands (knitr, tidyverse, pacman, magrittr, kableExtra). You will need to have an internet connection to reach a CRAN mirror where these packages are hosted and made available for installation. Use the "Packages" menu in the bottom right panel to install packages, or use install.packages("package_name") in the R console. Again, packages ONLY need to be installed once (like any other software) on a computer. Do NOT include install.package() commands inside an R Markdown chunk. This is pointless and time consuming. 
 
-If you have installed those packages AND any packages that they depend on, click on the Knit menu and choose "to HTML". View the document that is created. If the knit fails, read the error messages and try to fix the problem. Often this means installing additional packages called dependencies. Seek a TA for help if necessary.
+If you have installed those packages AND any packages that they depend on, click on the Knit menu and choose the HTML or PDF options. View the document that is created. If the knit fails, read the error messages and try to fix the problem. Often this means installing additional packages called dependencies. Seek a TA for help if necessary.
