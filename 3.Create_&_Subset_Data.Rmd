@@ -28,10 +28,11 @@ whoknows <-  age+5
 
 ## Dataframes
 
-Dataframes are the main data structure used for manipulating and analyzing data in R. A dataframe is essentially a rectangular arrangement of varaibles in columns and observations in rows. Dataframes can be created from vectors using the data.frame() command.
+Dataframes are the main data structure used for manipulating and analyzing data in R. A dataframe is essentially a rectangular arrangement of varaibles in columns and observations in rows. Dataframes can be created from vectors using the data.frame() command. We can also create vectors and package them into a dataframe simultaneously, as shown for the sex variable below.
 
 ```{r}
-df <- data.frame(age, name, whoknows)
+df <- data.frame(age, name, whoknows, sex = c('m', 'f', 'm', 'm', 'f', 'm'))
+head(df, 2)
 ```
 
 

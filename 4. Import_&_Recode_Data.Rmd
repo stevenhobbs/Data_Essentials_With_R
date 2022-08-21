@@ -15,7 +15,7 @@ pacman::p_load(knitr, tidyverse, kableExtra)
 opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 ```
 
-Often the first obstacle to data analysis is just getting the data into your software application. Data can come to us in a dizzying variety of formats including .csv, .txt, .json, .xls, .Rdata, and many others. R can handle most data formats, but uses different commands for different file types. In the beginning, students mostly work with .csv data and use the read_csv command from the tidyverse package. Note that this is a different command than read.csv, a base R command.
+Data can exist in a variety of file formats including .csv, .txt, .json, .xls, .Rdata, and many others. R can handle most data formats, but uses different commands for different file types. In the beginning, students mostly work with .csv data and use the read_csv command from the tidyverse package. Note that this is a different command than read.csv, a base R command.
 
 Before importing data, let's clear our environment of all the dataframes and values we have saved in cache memory. This is good practice whenever importing or transitioning to new data sets within an R project, as values and variables may overlap between data sets.
 

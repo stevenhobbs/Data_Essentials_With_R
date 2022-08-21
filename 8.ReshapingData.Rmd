@@ -17,7 +17,7 @@ opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 
 ## Repeated Measures Data: Wide & Long formats
 
-In human research we often take measurements on subjects at multiple timepoints. Often the most convenient way to collect data is to add columns of observations for each additional timepoint and keep all information for any one subject in a single row. Variable names can be appended with some indicator of timepoint, for example weight_t0, weight_t1, weight_t2, etc. This organizational scheme is called **wide format** because the data frames grow wider with each additional timepoint.
+In human research we like to take measurements on subjects across multiple timepoints. These experimental designs are called "repeated measures". Often the most convenient way to collect repeated measures data is to add columns of observations for each additional timepoint and keep all information for any one subject in a single row. Variable names can be appended with some indicator of timepoint, for example weight_t0, weight_t1, weight_t2, etc. This organizational scheme is called **wide format** because the data frames grow wider with each additional timepoint.
 
 Strictly speaking, the wide format does not conform to tidy data principals. A column such as weight_t0 contains information on two variables, the weight measurement and the time measurement. While the wide format occasionally has advantages in data analysis, the format also presents limitations because the timepoint variable does not exist in a single column.
 

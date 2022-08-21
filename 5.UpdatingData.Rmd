@@ -18,13 +18,24 @@ opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 
 ## Mutating the imported dataframe
 
-Mutate can be used to change existing variables in a dataframe and add new variables that are mathematically related to existing variables. For both scenarios, mutate can be included in a pipe chain during the initial data import, which reduces typing because the dataframe need only be specified once. 
+The mutate command is used to change 1 or more existing variables in a dataframe as well as add new variables that are mathematically related to existing variables. A single mutate command can create or mutate multiple variables. A great practice is to use mutate in a pipe chain during the initial data import, which reduces typing and reduces the number of dataframe versions that exist within your code. 
 
-Using mutate to change a dataframe during the initial import can also reduce errors and knitting failures. This strategy results in a single version of a dataframe that is used throughout the analysis. Consider that rarely do we write a script perfectly the first time. We don't write essays, speeches or short stories perfectly the first time, so why should coding be different? Often we return to earlier sections of a document to add or change code that we didn't realize was necessary in our first pass. Jumping around within a script to write code is dangerous though, because we can introduce changes that mean code written near the top relies upon code that appears later in the script. The code may initially run fine because the R environment stores the output of any code execution, regardless of the where the code exists in the script. Unfortunately, the script will fail to knit and throw errors for new sessions of R when we attempt to run the code sequentially, top to bottom. 
+Consider that rarely do we write a script perfectly the first time. We don't write essays, speeches or short stories perfectly the first time, so why should coding be different? Often we return to earlier sections of a document to add or change code that we didn't realize was necessary in our first pass. Jumping around within a script to write code is dangerous though, because we can introduce changes that mean code written near the beginning relies upon code that appears later in the script. The code may initially run fine because the R environment stores the output of any code execution, regardless of the where the code exists in the script. Unfortunately, the script will fail to knit and throw errors for new sessions of R when we attempt to run the code sequentially, beginning to end. 
 
-One way to minimize these problems is by creating and updating a single version of our dataframe during the initial import. If we later realize the need for additional variables, we simply return to the import pipe chain and add what is missing. A second strategy is to periodically clear the R environment using the broom icon, or by executing rm(list = ls()), and then running the code chunks sequentially to flush out sequence errors.
+One way to minimize these problems is by creating and updating a single version of our dataframe during the initial import. If we later realize the need for additional variables, we simply return to the import pipe chain to add what is missing. A second strategy is to periodically clear the R environment using the broom icon, or by executing rm(list = ls()), and then running the code chunks sequentially to flush out sequence errors.
 
-The code below imports our data, recodes the sex and group variables and then adds 6 more variables all in one execution. The code looks intimidating at first, but consider that it does not need to be written all at once, and probably shouldn't be. An easier and safer approach is to start with just the read_csv command and only the file path to import data. After the data are imported, view the variable types and then add the col_types argument to make necessary corrections. After the updated code produces the desired result, add the rename(gender) component with a pipe operator, and again execute the code and verify the results. Continue the cycle of adding components, executing and verifying the results until the dataframe reaches a "mature" state and is ready for analysis. If you later discover the need to create more variables, simply return to the import pipe chain and make the addition.
+The code below imports our data, recodes the sex and group variables and then adds 6 more variables all in one execution. The code looks intimidating at first, but consider that it does not need to be written all at once, and probably shouldn't be. An easier and safer approach is to write and execute code itteratively. Something like...
+
+1. Write & execute the read_csv command with nothing more than the file path. 
+2. Check the results and view the variable types.
+3. Add the col_types argument to specify variable types. 
+4. Execute code chunk and check results.
+5. Add rename(gender) using a pipe operator.
+6. Execute code chunk and check results.
+7. Add a mutate command to recode the sex and group variables.
+8. Execute code chunk and check results.
+
+Continue the cycle of adding components, executing and verifying the results until the dataframe reaches a "mature" state and is ready for analysis. If you later discover the need to create more variables, simply return to the import pipe chain and make the addition.
 
 ```{r}
 df <- 

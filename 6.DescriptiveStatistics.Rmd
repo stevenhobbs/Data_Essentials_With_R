@@ -15,7 +15,7 @@ pacman::p_load(knitr, tidyverse, kableExtra)
 opts_chunk$set(echo = TRUE, message=FALSE, warnings = FALSE)
 ```
 
-Now that we know how to import and mutate data to create a mature and functional dataframe, we usually want to continue by exploring our data through descriptive statistics and graphs. Again, we can choose between base R commands or the more versatile and powerful collection of Tidyverse commands. Let's jump right in and start with importing data using the import pipe chain developed in lesson 5.
+Now that we know how to import and mutate data to create a dataframe ready for analysis, we usually want to continue by exploring our data through descriptive statistics and graphs. Again, we can choose between base R commands or the more versatile and powerful collection of Tidyverse commands. Let's jump right in and start with importing data using the import pipe chain developed in lesson 5.
 
 ```{r}
 df <- 
