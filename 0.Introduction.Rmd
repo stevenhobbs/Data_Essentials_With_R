@@ -3,8 +3,8 @@ title: "Introduction"
 author: "Steven Hobbs"
 date: "2022-08-06"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
